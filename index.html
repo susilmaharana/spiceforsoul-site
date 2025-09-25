@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SpiceForSoul – Home Food Menu</title>
+  <meta name="description" content="Pure vegetarian/vegan homemade dishes and party trays in Bellevue, WA. No onion, no garlic, no eggs."/>
+  <meta name="theme-color" content="#0a8f6a"/>
+  <style>
+    :root{
+      --bg:#fdfcf7; --brand:#0a8f6a; --ink:#1b2a24; --muted:#53626a; --navbg:rgba(255,255,255,.98);
+      --gold:#d4af37; --accent:#0aa77b; --ring:#92e0cc;
+      --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);}
+
+    /* Sticky Top Navigation */
+    .top-bar{position:sticky; top:0; z-index:1400; background:var(--navbg); backdrop-filter:saturate(1.2) blur(10px); border-bottom:1px solid #eaeaea;}
+    .top-nav{max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:10px; padding:10px 14px;}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; color:var(--brand); text-decoration:none}
+    .brand img{width:36px; height:36px; border-radius:9px}
+    .links{display:flex; gap:10px; margin-left:auto; flex-wrap:wrap}
+    .links a{color:var(--brand); text-decoration:none; font-weight:700; padding:10px 12px; border-radius:10px; line-height:1;}
+    .links a:hover{ background:#eaf6f2 }
+    .links .cta{ border:1px solid var(--brand); padding:10px 14px; border-radius:999px; }
+
+    /* Hamburger */
+    .menu-toggle{
+      display:none; margin-left:auto; border:1px solid rgba(0,0,0,.08);
+      background:#eaf6f2; padding:6px; border-radius:12px; width:44px; height:44px;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+    }
+    .menu-toggle:focus-visible{outline:3px solid var(--ring); outline-offset:2px}
+    .menu-toggle .bar{display:block; width:24px; height:3px; margin:4px auto; background:var(--brand); border-radius:2px}
+    .menu-toggle .bar:nth-child(2){ width:20px }
+    .menu-toggle .bar:nth-child(3){ width:24px }
+
+    @media (max-width:860px){
+      .links{ display:none; position:fixed; left:0; right:0; top:60px; bottom:auto;
+        background:#fff; border-top:1px solid #eee; padding:12px 16px 16px; box-shadow:0 10px 24px rgba(0,0,0,.10); z-index:1350; }
+      .links.open{ display:grid; grid-template-columns:1fr 1fr; gap:10px 12px }
+      .menu-toggle{ display:block }
+    }
+
+    /* HERO */
+    header.hero{position:relative; min-height:62vh; display:grid; place-items:center; text-align:center; color:#fff; overflow:hidden;}
+    .hero::before{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.45)); z-index:0;}
+    .hero-content{ position:relative; z-index:2; padding:28px 20px; }
+    .logo{display:block;margin:0 auto 10px;width:96px;height:96px;border-radius:16px;background:#fff8;backdrop-filter:blur(.5px); object-fit:cover}
+    .hero h1{margin:0 0 6px;font-size:clamp(1.6rem, 2.4vw + 1rem, 3rem);letter-spacing:.2px;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+    .hero p{margin:6px 0 0;font-size:clamp(.95rem, .6vw + .9rem, 1.2rem);opacity:.98;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+
+    .hero-slides{ position:absolute; inset:0; z-index:1; }
+    .hero-slides .slide{
+      position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+      opacity:0; transition:opacity .8s ease; animation:fade 24s infinite;
+    }
+    .hero-slides .s1{ animation-delay:0s; }
+    .hero-slides .s2{ animation-delay:6s; }
+    .hero-slides .s3{ animation-delay:12s; }
+    .hero-slides .s4{ animation-delay:18s; }
+    .hero-slides.init .s1{ opacity:1; }
+
+    @keyframes fade{ 0%{opacity:0} 6%{opacity:1} 21%{opacity:1} 25%{opacity:0} 100%{opacity:0} }
+    @media (prefers-reduced-motion: reduce){
+      .hero-slides .slide{ animation:none; display:none }
+      .hero-slides .s1{ display:block; opacity:1 }
+    }
+
+    /* Intro */
+    .intro{ background:#fff; border:1px solid #eee; border-radius:16px; max-width:980px; margin:-36px auto 26px; padding:16px 18px; position:relative; z-index:3; box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    .intro h2{ margin:0 0 8px; font-size:1.15rem; color:var(--brand) }
+    .intro p{ margin:0; color:var(--muted); line-height:1.6 }
+    .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px }
+    .badge{ font-size:.85rem; color:#0a684f; background:#eaf6f2; border:1px dashed #bfe3d7; padding:6px 10px; border-radius:999px }
+
+    /* Layout & Tables */
+    .container{max-width:1000px;margin:30px auto;padding:0 16px 120px}
+    .section{margin:26px 0; scroll-margin-top:80px;}
+    .section h2{margin:0 0 10px; color:var(--brand); font-size:1.06rem; font-weight:800; border-bottom:2px solid var(--brand); display:inline-block; padding-bottom:6px}
+    .section-header{ display:flex; align-items:center; gap:10px; }
+    .mthumb{ width:34px; height:34px; border-radius:8px; object-fit:cover; display:none; }
+    @media (max-width:640px){ .mthumb{ display:inline-block } }
+
+    .table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch}
+    table{width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden}
+    thead th{ text-align:left; color:var(--brand); font-weight:800; padding:10px 10px 8px; border-bottom:1.5px solid var(--gold); white-space:nowrap }
+    tbody td{ padding:10px; vertical-align:top; border-bottom:1px solid rgba(0,0,0,.08) }
+    td.num{ text-align:right; font-weight:700 }
+    td.na{ color:#999; text-align:center }
+    td.call{ color:#b06b00; text-align:center; font-weight:700 }
+
+    .dish-btn{
+      appearance:none; background:none; border:none; padding:0; margin:0;
+      font:inherit; color:#0a7660; font-weight:800; cursor:pointer; text-align:left;
+    }
+    .dish-btn:hover, .dish-btn:focus{ text-decoration:underline; outline:2px solid transparent; outline-offset:2px }
+    .dish-btn:focus-visible{ outline:3px solid var(--ring); border-radius:6px }
+
+    @media (max-width:640px){
+      table, thead, tbody, th, td, tr{ display:block }
+      thead{ position:absolute; height:0; width:0; overflow:hidden; clip:rect(0 0 0 0) }
+      tbody tr{ background:#fff; margin:12px 0; border:1px solid #eee; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.05); padding:10px }
+      tbody td{ border:none; display:flex; justify-content:space-between; align-items:center; padding:8px 6px; gap:10px }
+      tbody td:first-child{ font-weight:700; color:#122; padding-top:2px; }
+      tbody td:not(:first-child)::before{ content:attr(data-label); font-size:.9rem; color:#5b746c; margin-right:10px; }
+      td.num{ text-align:right }
+      .dish-btn{ color:#0a7660; }
+    }
+
+    /* Sticky Social */
+    .social-bar{ position:fixed; right:14px; top:50%; transform:translateY(-50%); display:grid; gap:10px; z-index:1100; }
+    .social-bar a{ width:48px; height:48px; display:grid; place-items:center; background:#fff; border:1px solid #e9e9e9; border-radius:999px; box-shadow:0 4px 14px rgba(0,0,0,.08); }
+    .social-bar svg{ width:22px; height:22px; fill:var(--brand) }
+    @media (max-width:640px){
+      .social-bar{ top:auto; bottom:84px; right:12px; transform:none; }
+      .social-bar a{ width:44px; height:44px }
+    }
+
+    /* Mobile action bar */
+    .action-bar{ position:fixed; left:0; right:0; bottom:0; z-index:1200; background:#fff; border-top:1px solid #eaeaea; display:none; }
+    .action-inner{ max-width:1000px; margin:0 auto; display:flex; gap:10px; padding:10px 16px calc(10px + var(--safe-area-inset-bottom)); align-items:center; }
+    .action-inner a{ flex:1; text-align:center; text-decoration:none; font-weight:800; padding:12px 14px; border-radius:14px; border:1px solid var(--brand); color:#fff; background:var(--brand); }
+    .action-inner a.secondary{ background:#fff; color:var(--brand); }
+    @media (max-width:640px){ .action-bar{ display:block } }
+
+    /* Modal: compact, no inner scroll, smaller image */
+    .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1500; }
+    .modal.show{ display:flex }
+    .modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.5); backdrop-filter: blur(2px); }
+    .modal-dialog{
+      position:relative; z-index:1; width:min(740px, 94vw);
+      background:#fff; border-radius:16px; overflow:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      display:flex; flex-direction:column; max-height:92vh;
+    }
+    .modal-media{
+      flex:0 0 auto; width:100%;
+      background:#000; display:grid; place-items:center; overflow:hidden;
+      height:clamp(150px, 24vh, 220px);
+    }
+    .modal-media img{ width:100%; height:100%; object-fit:cover; display:block }
+    .modal-body{ flex:0 0 auto; padding:14px 16px 4px; background:#fff }
+    .modal-body h3{ margin:0 0 6px; color:#0a624c; font-size:1.2rem }
+    .modal-body p{ margin:.25rem 0 .5rem; color:#3b4b45; line-height:1.55 }
+    .ingredients{ margin:.35rem 0 .5rem; padding-left:18px; color:#2b3a34 }
+    .ingredients li{ margin:2px 0 }
+    .modal-tags{ display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 6px }
+    .modal-tags .tag{ font-size:.8rem; background:#eaf6f2; color:#0a684f; border:1px dashed #bfe3d7; padding:6px 10px; border-radius:999px }
+    .modal-footer{ padding:10px 16px 14px; display:flex; gap:8px; justify-content:flex-end; background:#fff }
+    .btn{ border:1px solid #0a8f6a; color:#fff; background:#0a8f6a; padding:10px 14px; border-radius:10px; font-weight:800; text-decoration:none; cursor:pointer }
+    .btn.secondary{ background:#fff; color:#0a8f6a }
+    .modal-close{
+      position:absolute; top:8px; right:8px; border:none; background:#fff; width:38px; height:38px;
+      border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,.15); cursor:pointer; display:grid; place-items:center; z-index:5;
+    }
+    .modal-close:focus-visible{ outline:3px solid var(--ring) }
+    .x{ width:18px; height:18px; display:block; position:relative }
+    .x::before, .x::after{ content:""; position:absolute; inset:0; margin:auto; width:2px; height:18px; background:#0a8f6a; border-radius:1px }
+    .x::before{ transform:rotate(45deg) } .x::after{ transform:rotate(-45deg) }
+
+    /* CONTACT */
+    .contact-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+    .contact-card{ background:#fff; border:1px solid #eee; border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:10px; box-shadow:0 6px 18px rgba(0,0,0,.05); }
+    .contact-card svg{ width:22px; height:22px; fill:#0a8f6a }
+    .contact-card a{ color:#0a7b60; font-weight:800; text-decoration:none; word-break:break-word }
+    .contact-card a:hover{ text-decoration:underline }
+    @media (max-width:640px){
+      .contact-grid{ grid-template-columns:1fr; }
+    }
+
+    /* ALLERGEN NOTICE */
+    .notice{ background:#fff; border:2px dashed #f0c36c; border-radius:14px; padding:14px 16px; box-shadow:0 8px 20px rgba(0,0,0,.05) }
+    .notice h3{ margin:0 0 8px; font-size:1rem; color:#8a5d00; display:flex; align-items:center; gap:8px }
+    .notice p{ margin:6px 0; color:#4a4a41; line-height:1.55 }
+    .notice ul{ margin:8px 0; padding-left:18px }
+    .notice li{ margin:2px 0 }
+    .icon{ width:20px; height:20px; display:inline-block; }
+    .icon svg{ width:20px; height:20px; fill:#f0a500 }
+
+    footer{padding:22px;text-align:center;color:#555;background:#fafafa;border-top:1px solid #eee;font-size:.95rem}
+  
+/* === Colorful palette & section theming === */
+:root{
+  --paprika:#b23a48;   /* warm chili */
+  --saffron:#a7620b;   /* dark saffron/amber for contrast */
+  --indigo:#2f4dbd;    /* deep indigo */
+  --plum:#6d28d9;      /* royal purple */
+}
+
+/* Default: keep headers green for Main Course */
+#main-course .section-header h2{ color: var(--brand) }
+#main-course thead th{ color: var(--brand); border-bottom-color: var(--brand) }
+#main-course .dish-btn:hover, #main-course .dish-btn:focus{ color: var(--brand) }
+
+/* Appetizers in warm paprika */
+#appetizers .section-header h2{ color: var(--paprika) }
+#appetizers thead th{ color: var(--paprika); border-bottom-color: var(--paprika) }
+#appetizers .dish-btn:hover, #appetizers .dish-btn:focus{ color: var(--paprika) }
+
+/* Desi Chinese in saffron */
+#desi-chinese .section-header h2{ color: var(--saffron) }
+#desi-chinese thead th{ color: var(--saffron); border-bottom-color: var(--saffron) }
+#desi-chinese .dish-btn:hover, #desi-chinese .dish-btn:focus{ color: var(--saffron) }
+
+/* Odisha in deep indigo */
+#odisha .section-header h2{ color: var(--indigo) }
+#odisha thead th{ color: var(--indigo); border-bottom-color: var(--indigo) }
+#odisha .dish-btn:hover, #odisha .dish-btn:focus{ color: var(--indigo) }
+
+/* Desserts in plum */
+#desserts .section-header h2{ color: var(--plum) }
+#desserts thead th{ color: var(--plum); border-bottom-color: var(--plum) }
+#desserts .dish-btn:hover, #desserts .dish-btn:focus{ color: var(--plum) }
+
+/* Badge rainbow for quick visual cues */
+.badges .badge:nth-child(1){ color:#0a684f; background:#eaf6f2; border-color:#bfe3d7 } /* same green */
+.badges .badge:nth-child(2){ color:var(--paprika); background:#fdecef; border-color:#f6c8d2 }
+.badges .badge:nth-child(3){ color:var(--plum); background:#f1e9fe; border-color:#d5c8fb }
+.badges .badge:nth-child(4){ color:var(--saffron); background:#fff3e1; border-color:#f6d9a8 }
+.badges .badge:nth-child(5){ color:var(--indigo); background:#e9efff; border-color:#c9d7ff }
+
+/* Improve header readability on mobile cards (label color) */
+@media (max-width:640px){
+  tbody td:not(:first-child)::before{ color:#5a6b78 }
+}
+
+
+/* === Accessibility & Color Polish (Apply All) === */
+
+/* Soft tints for header backgrounds */
+:root{
+  --tint-green:#eaf6f2;
+  --tint-paprika:#fdecef;
+  --tint-saffron:#fff3e1;
+  --tint-indigo:#e9efff;
+  --tint-plum:#f1e9fe;
+}
+
+/* Tinted table headers by section */
+#main-course thead th{ background: var(--tint-green); }
+#appetizers thead th{  background: var(--tint-paprika); }
+#desi-chinese thead th{ background: var(--tint-saffron); }
+#odisha thead th{      background: var(--tint-indigo); }
+#desserts thead th{    background: var(--tint-plum); }
+
+/* Zebra stripes (desktop only) */
+@media (min-width: 641px){
+  table tbody tr:nth-child(even){ background:#fafafa; }
+}
+
+/* Keep dish names readable by default; hover color is set per-section above */
+.dish-btn{ color: var(--ink); }
+
+/* Improve label contrast on mobile cards */
+@media (max-width:640px){
+  tbody td:not(:first-child)::before{ color:#52606d; }
+}
+
+</style>
+</head>
+<body>
+  <!-- Sticky Nav -->
+  <div class="top-bar">
+    <nav class="top-nav" aria-label="Primary">
+      <a class="brand" href="#home">
+        <img src="assets/logo.png" alt="SpiceForSoul logo" loading="lazy"><span>SpiceForSoul</span>
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <div id="nav-links" class="links" role="menu">
+        <a role="menuitem" href="#main-course">Main Course</a>
+        <a role="menuitem" href="#appetizers">Appetizers</a>
+        <a role="menuitem" href="#desi-chinese">Desi Chinese</a>
+        <a role="menuitem" href="#odisha">Regional (Odisha)</a>
+        <a role="menuitem" href="#desserts">Desserts</a>
+        <a role="menuitem" href="#contact">Contact</a>
+        <a class="cta" role="menuitem" href="tel:+14252464129">Call</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <header id="home" class="hero">
+    <div class="hero-slides init" aria-hidden="true">
+      <img class="slide s1" src="assets/hero_samosa-1280.jpg"
+           srcset="assets/hero_samosa-640.jpg 640w, assets/hero_samosa-1280.jpg 1280w, assets/hero_samosa-1920.jpg 1920w"
+           sizes="100vw" alt="Crispy samosas served with dipping sauce" decoding="async">
+      <img class="slide s2" loading="lazy" src="assets/hero_dahivada-1280.jpg"
+           srcset="assets/hero_dahivada-640.jpg 640w, assets/hero_dahivada-1280.jpg 1280w, assets/hero_dahivada-1920.jpg 1920w"
+           sizes="100vw" alt="Dahi vada topped with spice mix and chutneys" decoding="async">
+      <img class="slide s3" loading="lazy" src="assets/hero_chowmein-1280.jpg"
+           srcset="assets/hero_chowmein-640.jpg 640w, assets/hero_chowmein-1280.jpg 1280w, assets/hero_chowmein-1920.jpg 1920w"
+           sizes="100vw" alt="Vegetable chow mein with peppers and sesame" decoding="async">
+      <img class="slide s4" loading="lazy" src="assets/hero_kadhaipaneer-1280.jpg"
+           srcset="assets/hero_kadhaipaneer-640.jpg 640w, assets/hero_kadhaipaneer-1280.jpg 1280w, assets/hero_kadhaipaneer-1920.jpg 1920w"
+           sizes="100vw" alt="Paneer curry in kadhai with peppers and spices" decoding="async">
+    </div>
+    <div class="hero-content">
+      <img class="logo" src="assets/logo.png" alt="SpiceForSoul logo" loading="lazy" />
+      <h1>Pure Vegetarian Home Kitchen</h1>
+      <p>No onion • No garlic • No eggs — wholesome home food, cooked fresh in my kitchen and delivered to yours.</p>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <section class="intro" aria-labelledby="intro-title">
+    <h2 id="intro-title">Crave clean, homestyle food?</h2>
+    <p>My kitchen is purely vegetarian with no onion, no garlic, and no eggs—so there’s never a mix‑up. Every dish is freshly cooked at home in small batches, bringing pure vegetarian flavors from my kitchen to your home.</p>
+    <div class="badges" role="list" aria-label="Kitchen highlights">
+      <span class="badge" role="listitem">No onion</span>
+      <span class="badge" role="listitem">No garlic</span>
+      <span class="badge" role="listitem">No eggs</span>
+      <span class="badge" role="listitem">Home-cooked, small batches</span>
+      <span class="badge" role="listitem">Clean, vegetarian/vegan preparation</span>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- MAIN COURSE -->
+    <section class="section" id="main-course">
+      <div class="section-header">
+        <img class="mthumb" src="assets/thumb_hero_samosa.jpg" alt="Main course" loading="lazy">
+        <h2>🍛 Main Course</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dish</th><th>32oz</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <tbody>
+            <tr><td><button class="dish-btn" data-dish="Chhole">Chhole</button></td><td class='num' data-label='32oz'><strong>12</strong></td><td class='num' data-label='Half Tray'><strong>45</strong></td><td class='num' data-label='Full Tray'><strong>80</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Rajma Masala">Rajma Masala</button></td><td class='num' data-label='32oz'><strong>12</strong></td><td class='num' data-label='Half Tray'><strong>45</strong></td><td class='num' data-label='Full Tray'><strong>80</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Gobi Matar (Semi Dry)">Alu Gobi Matar (Semi Dry)</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Navratan Korma">Navratan Korma</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Palak Paneer">Palak Paneer</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Kadahi Paneer">Kadahi Paneer</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Matar Paneer">Matar Paneer</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Butter Paneer Masala">Butter Paneer Masala</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Plain Rice">Plain Rice</button></td><td class='num' data-label='32oz'><strong>5</strong></td><td class='num' data-label='Half Tray'><strong>18</strong></td><td class='num' data-label='Full Tray'><strong>30</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Jeera Rice">Jeera Rice</button></td><td class='num' data-label='32oz'><strong>6</strong></td><td class='num' data-label='Half Tray'><strong>22</strong></td><td class='num' data-label='Full Tray'><strong>40</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- APPETIZERS -->
+    <section class="section" id="appetizers">
+      <div class="section-header">
+        <img class="mthumb" src="assets/thumb_hero_dahivada.jpg" alt="Appetizers" loading="lazy">
+        <h2>🥟 Appetizers</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dish</th><th>12 pcs</th><th>50 pcs</th><th>100 pcs</th></tr></thead>
+          <tbody>
+            <tr><td><button class="dish-btn" data-dish="Mix Vegetable Samosa">Mix Vegetable Samosa — 2 pcs</button></td><td class='num' data-label='12 pcs'><strong>20</strong></td><td class='num' data-label='50 pcs'><strong>72</strong></td><td class='num' data-label='100 pcs'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Samosa">Samosa — 2 pcs</button></td><td class='num' data-label='12 pcs'><strong>20</strong></td><td class='num' data-label='50 pcs'><strong>72</strong></td><td class='num' data-label='100 pcs'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Chop">Alu Chop — 2 pcs</button></td><td class='num' data-label='12 pcs'><strong>20</strong></td><td class='num' data-label='50 pcs'><strong>72</strong></td><td class='num' data-label='100 pcs'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Dal Vada">Dal Vada — 2 pcs</button></td><td class='num' data-label='12 pcs'><strong>20</strong></td><td class='num' data-label='50 pcs'><strong>72</strong></td><td class='num' data-label='100 pcs'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Dahi Vada">Dahi Vada — 2 pcs</button></td><td class='num' data-label='12 pcs'><strong>24</strong></td><td class='num' data-label='50 pcs'><strong>95</strong></td><td class='num' data-label='100 pcs'><strong>180</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DESI CHINESE -->
+    <section class="section" id="desi-chinese">
+      <div class="section-header">
+        <img class="mthumb" src="assets/thumb_hero_chowmein.jpg" alt="Chow mein" loading="lazy">
+        <h2>🥢 Desi Chinese</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dish</th><th>1 plate</th><th></th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <tbody>
+            <tr><td><button class="dish-btn" data-dish="Veg Noodles">Veg Noodles (per plate)</button></td><td class='num' data-label='1 plate'><strong>9</strong></td><td class='num' data-label=''><strong></strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Gobi Manchurian">Gobi Manchurian</button></td><td class='num' data-label='1 plate'><strong>10</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Mix Veg Manchurian">Mix Veg Manchurian</button></td><td class='num' data-label='1 plate'><strong>10</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Gobi Chilly">Gobi Chilly</button></td><td class='num' data-label='1 plate'><strong>10</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Paneer Chilly">Paneer Chilly</button></td><td class='num' data-label='1 plate'><strong>11</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- REGIONAL (Odisha) -->
+    <section class="section" id="odisha">
+      <div class="section-header">
+        <img class="mthumb" src="assets/thumb_hero_kadhaipaneer.jpg" alt="Odisha specials" loading="lazy">
+        <h2>🌾 Regional Special (Odisha)</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dish</th><th>32oz</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <tbody>
+            <tr><td><button class="dish-btn" data-dish="Dahi Bara Aloo Dum">Dahi Bara Aloo Dum</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Odia Style Potato and Peas Chat">Odia Style Potato and Peas Chat</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Poori and Upma with Guguni">Poori and Upma with Guguni</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Mix Vegetable Curry (Odia Ghaanta)">Mix Vegetable Curry (Odia Ghaanta)</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Potala (Parval) Khurma (seasonal)">Alu Potala (Parval) Khurma (seasonal)</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Chhatu Rai">Chhatu Rai</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DESSERTS -->
+    <section class="section" id="desserts">
+      <div class="section-header">
+        <img class="mthumb" src="assets/thumb_hero_samosa.jpg" alt="Desserts" loading="lazy">
+        <h2>🍮 Desserts</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dish</th><th>32oz</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <tbody>
+            <tr><td><button class="dish-btn" data-dish="Sooji Halwa">Sooji Halwa</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Mango Kesari Halwa">Mango Kesari Halwa</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Vermicelli Kheer">Vermicelli Kheer</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Rice Kheer">Rice Kheer</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ALLERGENS -->
+    <section class="section" id="allergens" aria-labelledby="allergen-title">
+      <h2 id="allergen-title">⚠️ Allergen & Kitchen Notice</h2>
+      <div class="notice" role="note" aria-label="Allergen notice">
+        <h3><span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        </span> Please read before ordering</h3>
+        <p>We cook in a <strong>purely vegetarian home kitchen</strong> — <em>no onion, no garlic, no eggs</em>. Some dishes contain dairy and nuts. </p>
+        <ul>
+          <li>While we take care to avoid cross‑contact, our kitchen is <strong>not certified allergen‑free</strong>.</li>
+          <li>If you need ingredient specifics for a dish, tap the dish name to view its details.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="section-header">
+        <img class="mthumb" src="assets/thumb_hero_chowmein.jpg" alt="Contact" loading="lazy">
+        <h2>📞 Contact / Orders</h2>
+      </div>
+      <div class="contact-grid" role="list">
+        <div class="contact-card" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1v3.5a1 1 0 01-1 1C11.3 21.02 2.98 12.7 2.98 2.98a1 1 0 011-1H7.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/></svg>
+          <a href="tel:+14252464129" aria-label="Call SpiceForSoul">+1 (425) 246-4129</a>
+        </div>
+        <div class="contact-card" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <a href="mailto:orders@spiceforsoul.com">orders@spiceforsoul.com</a>
+        </div>
+        <div class="contact-card" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <span>Bellevue, WA</span>
+        </div>
+        <div class="contact-card" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.9 2.1a1 1 0 011.2 0l9 6.75A1 1 0 0121 10H3a1 1 0 01-.6-1.84l8.5-6.06zM3 12h18v8a2 2 0 01-2 2H5a2 2 0 01-2-2v-8z"/></svg>
+          <a href="https://SpiceForSoul.com" target="_blank" rel="noopener">SpiceForSoul.com</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Sticky Social -->
+  <div class="social-bar" aria-label="Quick social links">
+    <a href="tel:+14252464129" title="Call">
+      <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1v3.5a1 1 0 01-1 1C11.3 21.02 2.98 12.7 2.98 2.98a1 1 0 011-1H7.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/></svg>
+    </a>
+    <a href="https://wa.me/14252464129" title="WhatsApp">
+      <svg viewBox="0 0 24 24"><path d="M12.04 2a9.96 9.96 0 00-8.6 15.1L2 22l4.99-1.3A9.96 9.96 0 1012.04 2zm5.83 14.23c-.25.7-1.48 1.34-2.04 1.39-.53.05-1.19.08-1.92-.12-.44-.12-1-.33-1.73-.65-3.05-1.31-5.04-4.52-5.19-4.73-.15-.21-1.24-1.65-1.24-3.15s.79-2.24 1.07-2.54c.28-.3.6-.38.8-.38h.58c.19 0 .44-.07.68.52.25.61.85 2.09.93 2.24.08.15.14.33.03.54-.11.21-.17.33-.34.51-.17.18-.36.41-.51.55-.17.17-.35.36-.15.7.2.33.91 1.5 1.95 2.43 1.34 1.19 2.47 1.57 2.83 1.75.36.18.57.16.78-.1.21-.26.89-1.04 1.12-1.4.23-.36.47-.3.78-.18.31.12 1.98.93 2.32 1.1.34.17.57.26.66.41.09.15.09.84-.16 1.54z"/></svg>
+    </a>
+    <a href="mailto:orders@spiceforsoul.com" title="Email">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    </a>
+  </div>
+
+  <!-- Mobile quick action bar -->
+  <div class="action-bar" role="navigation" aria-label="Quick actions">
+    <div class="action-inner">
+      <a href="tel:+14252464129">Call</a>
+      <a class="secondary" href="https://wa.me/14252464129">WhatsApp</a>
+      <a class="secondary" href="mailto:orders@spiceforsoul.com">Email</a>
+    </div>
+  </div>
+
+  <!-- Modal template -->
+  <div class="modal" id="dish-modal" aria-hidden="true" role="dialog" aria-labelledby="dish-title">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-dialog" role="document">
+      <button class="modal-close" type="button" aria-label="Close (Esc)" data-close="true"><span class="x" aria-hidden="true"></span></button>
+      <div class="modal-media">
+        <img id="dish-image" alt="" onerror="this.onerror=null; this.src='assets/hero_samosa-640.jpg';">
+      </div>
+      <div class="modal-body">
+        <h3 id="dish-title">Dish</h3>
+        <p id="dish-desc">Pure vegetarian/vegan preparation. No onion, no garlic, no eggs. Home-cooked fresh in small batches.</p>
+        <ul id="dish-ingredients" class="ingredients"></ul>
+        <div class="modal-tags">
+          <span class="tag">Vegetarian</span>
+          <span class="tag">No onion</span>
+          <span class="tag">No garlic</span>
+          <span class="tag">No eggs</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn secondary" data-close="true">Close</button>
+        <a class="btn" href="tel:+14252464129">Order by phone</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 SpiceForSoul • Bellevue, WA </footer>
+
+  <script>
+    const topBar = document.querySelector('.top-bar');
+    const onScroll = () => topBar.classList.toggle('scrolled', window.scrollY > 6);
+    document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+    const toggle = document.querySelector('.menu-toggle');
+    const links = document.getElementById('nav-links');
+    toggle?.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    links?.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A' && links.classList.contains('open')) {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded','false');
+        toggle.setAttribute('aria-label','Open menu');
+      }
+    });
+
+    const slidesWrap = document.querySelector('.hero-slides');
+    window.addEventListener('load', () => slidesWrap?.classList.remove('init'));
+
+    const DISH_INFO = {
+      "Samosa": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Crispy pastry filled with spiced potatoes and peas. Served with chutney.",
+        ing: ["All-purpose flour crust", "Potato", "Green peas", "Carrot (optional)", "Ginger", "Spice blend", "Oil for frying"]
+      },
+      "Mix Vegetable Samosa": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Mixed veggie filling with homemade masalas.",
+        ing: ["Flour crust", "Potato", "Green peas", "Carrot", "Beetroot", "Cabbage", "Ginger", "Spices"]
+      },
+      "Dahi Vada": {
+        img: "assets/hero_dahivada-1280.jpg",
+        desc: "Lentil dumplings soaked in spiced yogurt, topped with masalas and chutneys.",
+        ing: ["Urad dal", "Yogurt", "Cumin & chili powder", "Tamarind & green chutney", "Coriander"]
+      },
+      "Veg Noodles": {
+        img: "assets/hero_chowmein-1280.jpg",
+        desc: "Stir‑fried noodles with peppers, cabbage, carrots, and a house sauce.",
+        ing: ["Wheat noodles", "Bell peppers", "Cabbage", "Carrot", "Soy & chili sauces", "Vinegar", "Ginger"]
+      },
+      "Gobi Manchurian": {
+        img: "assets/hero_chowmein-1280.jpg",
+        desc: "Crispy cauliflower tossed in tangy Manchurian sauce (no garlic).",
+        ing: ["Cauliflower", "Corn flour", "Soy & chili sauces", "Vinegar", "Ginger", "Spring herbs"]
+      },
+      "Mix Veg Manchurian": {
+        img: "assets/hero_chowmein-1280.jpg",
+        desc: "Vegetable dumplings in savory Manchurian gravy.",
+        ing: ["Mixed veg dumplings", "Corn flour", "Soy & chili sauces", "Ginger", "Herbs"]
+      },
+      "Gobi Chilly": {
+        img: "assets/hero_chowmein-1280.jpg",
+        desc: "Cauliflower tossed with peppers and chilies.",
+        ing: ["Cauliflower", "Bell peppers", "Green chilies", "Ginger", "Soy/chili sauces"]
+      },
+      "Paneer Chilly": {
+        img: "assets/hero_chowmein-1280.jpg",
+        desc: "Paneer cubes with peppers in a chili-style sauce (no garlic).",
+        ing: ["Paneer", "Bell peppers", "Green chilies", "Ginger", "Soy/chili sauces"]
+      },
+      "Kadahi Paneer": {
+        img: "assets/hero_kadhaipaneer-1280.jpg",
+        desc: "Paneer with capsicum and spices in a kadhai-style gravy.",
+        ing: ["Paneer", "Capsicum", "Tomato", "Kadhai spice mix", "Cream (optional)"]
+      },
+      "Palak Paneer": {
+        img: "assets/hero_kadhaipaneer-1280.jpg",
+        desc: "Paneer simmered in smooth spinach gravy.",
+        ing: ["Spinach", "Paneer", "Tomato", "Ginger", "Mild spices", "Cream (optional)"]
+      },
+      "Matar Paneer": {
+        img: "assets/hero_kadhaipaneer-1280.jpg",
+        desc: "Paneer and green peas in light tomato-based gravy.",
+        ing: ["Paneer", "Green peas", "Tomato", "Ginger", "Spices"]
+      },
+      "Butter Paneer Masala": {
+        img: "assets/hero_kadhaipaneer-1280.jpg",
+        desc: "Mildly spiced creamy paneer masala (no onion, no garlic).",
+        ing: ["Paneer", "Tomato", "Butter", "Cream", "Cashew (optional)", "Spices"]
+      },
+      "Chhole": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Punjab-style chickpeas cooked with warm spices.",
+        ing: ["Chickpeas", "Tomato", "Ginger", "Chhole masala", "Tea decoction (optional)"]
+      },
+      "Rajma Masala": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Red kidney beans in homestyle gravy.",
+        ing: ["Kidney beans", "Tomato", "Ginger", "Spices"]
+      },
+      "Alu Gobi Matar (Semi Dry)": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Potatoes, cauliflower, and peas cooked semi-dry with spices.",
+        ing: ["Potato", "Cauliflower", "Green peas", "Tomato", "Ginger", "Spices"]
+      },
+      "Navratan Korma": {
+        img: "assets/hero_kadhaipaneer-1280.jpg",
+        desc: "Mixed vegetables in a mildly sweet, rich korma sauce.",
+        ing: ["Mixed vegetables", "Cashew/cream", "Tomato", "Spices", "Raisins (optional)"]
+      },
+      "Plain Rice": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Steamed rice, perfect with any curry.",
+        ing: ["Rice", "Water", "Salt (optional)"]
+      },
+      "Jeera Rice": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Fragrant cumin tempered rice.",
+        ing: ["Rice", "Cumin seeds", "Ghee/Oil", "Salt"]
+      },
+      "Dahi Bara Aloo Dum": {
+        img: "assets/hero_dahivada-1280.jpg",
+        desc: "Odia classic: dahi bara served with spicy aloo dum.",
+        ing: ["Urad dal vada", "Yogurt", "Spices", "Potato curry", "Coriander"]
+      },
+      "Odia Style Potato and Peas Chat": {
+        img: "assets/hero_dahivada-1280.jpg",
+        desc: "Comforting Odia snack with potatoes and peas.",
+        ing: ["Potato", "Yellow peas", "Tamarind", "Spices", "Coriander"]
+      },
+      "Poori and Upma with Guguni": {
+        img: "assets/hero_dahivada-1280.jpg",
+        desc: "Traditional combo served with Odisha-style yellow peas curry.",
+        ing: ["Poori", "Upma (semolina)", "Yellow peas curry", "Spices"]
+      },
+      "Mix Vegetable Curry (Odia Ghaanta)": {
+        img: "assets/hero_dahivada-1280.jpg",
+        desc: "Rustic mixed-veg curry from Odisha.",
+        ing: ["Mixed vegetables", "Dal (optional)", "Mustard/Jeera tempering", "Spices"]
+      },
+      "Alu Potala (Parval) Khurma (seasonal)": {
+        img: "assets/hero_dahivada-1280.jpg",
+        desc: "Seasonal pointed gourd curry with potatoes.",
+        ing: ["Potala (parval)", "Potato", "Tomato", "Spices"]
+      },
+      "Chhatu Rai": {
+        img: "assets/hero_dahivada-1280.jpg",
+        desc: "Mushroom curry in Odia style.",
+        ing: ["Mushroom", "Tomato", "Yogurt (optional)", "Spices"]
+      },
+      "Sooji Halwa": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Semolina halwa cooked with ghee and cardamom.",
+        ing: ["Semolina", "Ghee", "Sugar", "Cardamom", "Nuts (optional)"]
+      },
+      "Mango Kesari Halwa": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Kesari halwa infused with mango.",
+        ing: ["Semolina", "Ghee", "Sugar", "Mango pulp", "Cardamom"]
+      },
+      "Vermicelli Kheer": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Seviyan kheer simmered in milk.",
+        ing: ["Vermicelli", "Milk", "Sugar", "Cardamom", "Nuts (optional)"]
+      },
+      "Rice Kheer": {
+        img: "assets/hero_samosa-1280.jpg",
+        desc: "Classic rice pudding with cardamom.",
+        ing: ["Rice", "Milk", "Sugar", "Cardamom", "Nuts (optional)"]
+      }
+    };
+
+    function guessImage(name){
+      const n = name.toLowerCase();
+      if(n.includes("samosa")) return "assets/hero_samosa-1280.jpg";
+      if(n.includes("dahi")) return "assets/hero_dahivada-1280.jpg";
+      if(n.includes("vada") || n.includes("bara")) return "assets/hero_dahivada-1280.jpg";
+      if(n.includes("noodle") || n.includes("manchurian") || n.includes("chilly") || n.includes("chow")) return "assets/hero_chowmein-1280.jpg";
+      if(n.includes("paneer") || n.includes("korma")) return "assets/hero_kadhaipaneer-1280.jpg";
+      return "assets/hero_samosa-640.jpg";
+    }
+
+    const modal = document.getElementById("dish-modal");
+    const imgEl = document.getElementById("dish-image");
+    const titleEl = document.getElementById("dish-title");
+    const descEl = document.getElementById("dish-desc");
+    const ingEl  = document.getElementById("dish-ingredients");
+    let lastFocused = null;
+
+    function openModal(name){
+      lastFocused = document.activeElement;
+      const info = DISH_INFO[name] || {};
+      titleEl.textContent = name;
+      imgEl.src = info.img || guessImage(name);
+      imgEl.alt = name;
+      descEl.textContent = info.desc || "Pure vegetarian/vegan preparation. No onion, no garlic, no eggs. Home-cooked fresh in small batches.";
+      ingEl.innerHTML = "";
+      const ings = info.ing || ["Ingredients vary by batch; always vegetarian, no onion, no garlic, no eggs."];
+      for(const item of ings){
+        const li = document.createElement("li");
+        li.textContent = item;
+        ingEl.appendChild(li);
+      }
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden","false");
+      modal.querySelector(".modal-close").focus();
+      document.body.style.overflow = "hidden";
+    }
+    function closeModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+      if(lastFocused && typeof lastFocused.focus === "function"){ lastFocused.focus(); }
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".dish-btn");
+      if(btn){ e.preventDefault(); openModal(btn.dataset.dish); return; }
+      if(e.target.closest("[data-close]")){ closeModal(); }
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
+    });
+  </script>
+</body>
+</html>
