@@ -228,37 +228,20 @@
 }
 
 
-/* === Accessibility & Color Polish (Apply All) === */
+/* === Azure SWA Multiuser Tools === */
+.azure-tools{ display:none; gap:8px; align-items:center; }
+body.editing .azure-tools{ display:flex }
+.badge-pill{ font-size:.8rem; padding:4px 8px; border-radius:999px; background:#eef1ff; color:#2f4dbd; border:1px solid #cfd8ff }
+.badge-pill.warn{ background:#fff3e1; color:#8a5d00; border-color:#f6d9a8 }
+.toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:150px; z-index:2400;
+  background:#111; color:#fff; padding:10px 14px; border-radius:10px; box-shadow:0 20px 40px rgba(0,0,0,.35); display:none; }
+.toast.show{ display:block }
 
-/* Soft tints for header backgrounds */
-:root{
-  --tint-green:#eaf6f2;
-  --tint-paprika:#fdecef;
-  --tint-saffron:#fff3e1;
-  --tint-indigo:#e9efff;
-  --tint-plum:#f1e9fe;
-}
+</style>
 
-/* Tinted table headers by section */
-#main-course thead th{ background: var(--tint-green); }
-#appetizers thead th{  background: var(--tint-paprika); }
-#desi-chinese thead th{ background: var(--tint-saffron); }
-#odisha thead th{      background: var(--tint-indigo); }
-#desserts thead th{    background: var(--tint-plum); }
-
-/* Zebra stripes (desktop only) */
-@media (min-width: 641px){
-  table tbody tr:nth-child(even){ background:#fafafa; }
-}
-
-/* Keep dish names readable by default; hover color is set per-section above */
-.dish-btn{ color: var(--ink); }
-
-/* Improve label contrast on mobile cards */
-@media (max-width:640px){
-  tbody td:not(:first-child)::before{ color:#52606d; }
-}
-
+<style id="hf-only-css">
+  /* Non-destructive: only hide unused columns so all dishes & design remain */
+  th.hf-hide, td.hf-hide { display: none !important; }
 </style>
 </head>
 <body>
@@ -735,5 +718,171 @@
       if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
     });
   </script>
+<div class="admin-bar" id="admin-bar" role="toolbar" aria-label="Editor actions"></div>
+
+<script>
+(function(){
+  const DOC_SLUG = "spiceforsoul";
+  let currentETag = null;
+  let autoSyncTimer = null;
+
+  function toast(msg, timeout=2600){
+    let t = document.getElementById("toast");
+    if(!t){ t = document.createElement("div"); t.id="toast"; t.className="toast"; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add("show");
+    setTimeout(()=> t.classList.remove("show"), timeout);
+  }
+
+  async function getMe(){
+    try{
+      const r = await fetch("/.auth/me", { credentials:"include" });
+      if(!r.ok) return null;
+      const j = await r.json();
+      return (j && j.clientPrincipal) ? j.clientPrincipal : null;
+    }catch(e){ return null; }
+  }
+
+  function buildAzureTools(){
+    const bar = document.getElementById("admin-bar");
+    if(!bar || document.getElementById("azure-tools")) return;
+    const wrap = document.createElement("div");
+    wrap.className = "azure-tools";
+    wrap.id = "azure-tools";
+    wrap.innerHTML = `
+      <span id="auth-status" class="badge-pill warn">Offline edits</span>
+      <div id="auth-actions">
+        <a class="btn secondary" href="/.auth/login/github?post_login_redirect_uri=${encodeURIComponent(location.href)}">GitHub</a>
+        <a class="btn secondary" href="/.auth/login/aad?post_login_redirect_uri=${encodeURIComponent(location.href)}">Microsoft</a>
+        <a class="btn secondary" href="/.auth/login/google?post_login_redirect_uri=${encodeURIComponent(location.href)}">Google</a>
+      </div>
+      <a class="btn secondary" id="btn-logout" href="/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(location.href)}" style="display:none">Sign out</a>
+      <button class="btn" id="btn-save-server">Save to Server</button>
+      <button class="btn secondary" id="btn-sync">Sync Now</button>
+    `;
+    bar.appendChild(wrap);
+  }
+
+  function setAuthedUI(user){
+    const status = document.getElementById("auth-status");
+    const authActions = document.getElementById("auth-actions");
+    const logoutBtn = document.getElementById("btn-logout");
+    if(user){
+      status.textContent = user.userDetails || "Signed in";
+      status.classList.remove("warn");
+      authActions.style.display = "none";
+      logoutBtn.style.display = "inline-block";
+    }else{
+      status.textContent = "Offline edits";
+      status.classList.add("warn");
+      authActions.style.display = "inline-block";
+      logoutBtn.style.display = "none";
+    }
+  }
+
+  function payloadFromDOM(){
+    const menu = (typeof parseMenuFromDOM === "function") ? parseMenuFromDOM() : null;
+    const info = (window.DISH_INFO_RUNTIME || window.DISH_INFO || {}) || {};
+    return { menu, info };
+  }
+  function applyPayload(data){
+    if(!data) return;
+    try{
+      if(data.menu && typeof applyMenuToDOM === "function"){ applyMenuToDOM(data.menu); }
+      if(data.info){
+        if(typeof window.DISH_INFO_RUNTIME !== "undefined") window.DISH_INFO_RUNTIME = data.info;
+        if(typeof window.DISH_INFO !== "undefined") window.DISH_INFO = data.info;
+      }
+    }catch(e){ console.error(e); }
+  }
+
+  async function syncFromServer(force=false){
+    const headers = { "Accept":"application/json" };
+    if(currentETag && !force) headers["If-None-Match"] = currentETag;
+    const res = await fetch(`/api/menu/${DOC_SLUG}?t=${Date.now()}`, { headers, credentials:"include" });
+    if(res.status === 304){ return false; }
+    if(!res.ok){ toast("Sync failed"); return false; }
+    const etag = res.headers.get("etag"); if(etag) currentETag = etag;
+    const json = await res.json();
+    if(json && json.data){ applyPayload(json.data); }
+    toast("Synced");
+    return true;
+  }
+
+  async function persistToServer(){
+    const me = await getMe();
+    if(!me){ alert("Sign in first to save to server."); return; }
+    const body = JSON.stringify(payloadFromDOM());
+    const headers = { "Content-Type":"application/json" };
+    if(currentETag) headers["If-Match"] = currentETag;
+    const res = await fetch(`/api/menu/${DOC_SLUG}`, {
+      method:"PUT", headers, body, credentials:"include"
+    });
+    if(res.status === 412){ toast("Version conflict — please Sync and try again."); return; }
+    if(!res.ok){ toast("Save failed"); return; }
+    const etag = res.headers.get("etag"); if(etag) currentETag = etag;
+    toast("Saved");
+  }
+
+  function startAutoSync(){
+    if(autoSyncTimer) clearInterval(autoSyncTimer);
+    autoSyncTimer = setInterval(()=> syncFromServer(false), 15000);
+  }
+
+  window.addEventListener("DOMContentLoaded", async () => {
+    buildAzureTools();
+    const me = await getMe();
+    setAuthedUI(me);
+    await syncFromServer(true);
+    startAutoSync();
+
+    document.getElementById("btn-sync")?.addEventListener("click", () => syncFromServer(true));
+    document.getElementById("btn-save-server")?.addEventListener("click", persistToServer);
+  });
+})();
+</script>
+
+
+<script id="hf-only">
+(function(){
+  function norm(s){ return (s||"").toString().replace(/\s+/g," ").trim().toLowerCase(); }
+  function headerCells(tbl){ var thead = tbl.querySelector("thead"); return thead ? Array.from(thead.querySelectorAll("th")) : []; }
+  function relabel(th, label){ if(!th) return; var target = th.querySelector(".label, span, strong") || th; target.textContent = label; }
+  function findIndex(ths, test){ for (var i=0;i<ths.length;i++) if (test(ths[i], i)) return i; return -1; }
+  function isDishHeader(t){ var n = norm(t); return n==="dish"||n==="item"||n==="items"||n==="menu item"||n==="name"; }
+  function isHalf(th){ var t = norm(th.textContent); return t.includes("half tray")||t==="half"||/\b50(\s*pcs|\b)/.test(t); }
+  function isFull(th){ var t = norm(th.textContent); return t.includes("full tray")||t==="full"||/\b100(\s*pcs|\b)/.test(t); }
+
+  function keepOnlyHalfFull(tbl){
+    var ths = headerCells(tbl); if(!ths.length) return;
+    var dishIdx = findIndex(ths, th => isDishHeader(th.textContent)); if (dishIdx < 0) dishIdx = 0;
+    var halfIdx = findIndex(ths, isHalf);
+    var fullIdx = findIndex(ths, isFull);
+    if (halfIdx === -1 && fullIdx === -1) return; // nothing to change
+
+    // If mapped from pcs or bare "half/full", relabel headers for clarity
+    if (halfIdx >= 0) {
+      var ht = norm(ths[halfIdx].textContent);
+      if (/\b50(\s*pcs|\b)/.test(ht) || ht === "half") relabel(ths[halfIdx], "Half Tray");
+    }
+    if (fullIdx >= 0) {
+      var ft = norm(ths[fullIdx].textContent);
+      if (/\b100(\s*pcs|\b)/.test(ft) || ft === "full") relabel(ths[fullIdx], "Full Tray");
+    }
+
+    // Hide every other column (headers + cells) — preserve layout otherwise
+    ths.forEach((th,i)=>{ if(i!==dishIdx && i!==halfIdx && i!==fullIdx) th.classList.add("hf-hide"); else th.classList.remove("hf-hide"); });
+    tbl.querySelectorAll("tbody tr").forEach(tr=>{
+      var tds = tr.querySelectorAll("td");
+      for (var i=0;i<tds.length;i++){
+        if(i!==dishIdx && i!==halfIdx && i!==fullIdx) tds[i].classList.add("hf-hide");
+        else tds[i].classList.remove("hf-hide");
+      }
+    });
+  }
+
+  function run(){ document.querySelectorAll("table").forEach(keepOnlyHalfFull); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
+})();
+</script>
 </body>
 </html>
