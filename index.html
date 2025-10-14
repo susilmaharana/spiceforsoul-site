@@ -243,6 +243,218 @@ body.editing .azure-tools{ display:flex }
   /* Non-destructive: only hide unused columns so all dishes & design remain */
   th.hf-hide, td.hf-hide { display: none !important; }
 </style>
+
+<style>
+
+/***** Price alignment (non-destructive) *****/
+table.price-align thead th:nth-child(2),
+table.price-align thead th:nth-child(3){ text-align:right; }
+table.price-align td:nth-child(2),
+table.price-align td:nth-child(3){ text-align:right; width:8.5ch; }
+table.price-align td:nth-child(2) .price,
+table.price-align td:nth-child(3) .price{
+  display:inline-block; min-width:7ch; text-align:right;
+  font-feature-settings:"tnum"; font-variant-numeric:tabular-nums;
+}
+
+/***** Weekend Specials (stacked cards) *****/
+#weekend-specials .ws-list{
+  display:grid; grid-template-columns:1fr; gap:12px;
+}
+#weekend-specials .ws-card{
+  background:#fff; border:1px solid #eee; border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.05); overflow:hidden; display:flex; gap:0;
+}
+#weekend-specials .ws-media{
+  flex:0 0 34%; max-width:34%;
+  background:#000; display:grid; place-items:center;
+}
+#weekend-specials .ws-media img{ width:100%; height:100%; object-fit:cover; display:block }
+#weekend-specials .ws-body{ padding:12px 14px; }
+#weekend-specials .ws-body h3{ margin:0 0 6px; color:#0a624c; font-size:1.05rem }
+#weekend-specials .ws-body p{ margin:0; color:#3b4b45; }
+#weekend-specials .tag{
+  display:inline-block; margin-top:6px; font-size:.8rem;
+  background:#eaf6f2; color:#0a684f; border:1px dashed #bfe3d7; padding:6px 10px; border-radius:999px;
+}
+@media (max-width:640px){
+  #weekend-specials .ws-card{ flex-direction:column }
+  #weekend-specials .ws-media{ max-width:none; flex:0 0 auto; height:180px }
+}
+
+/* ----- PRICE COLUMN ALIGNMENT (desktop + mobile) ----- */
+table.price-align { --w-small: 7ch; --w-medium: 8ch; --w-large: 9ch; }
+
+/* Default: right-align any numeric cell and use tabular numerals */
+table.price-align td.num { 
+  text-align: right; 
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Wrap numbers for consistent width */
+table.price-align td.num > .price {
+  display: inline-block;
+  min-width: var(--w-medium);
+  text-align: right;
+}
+
+/* If the header set includes “Half Tray”/“Full Tray” ensure the last two columns are fixed width */
+table.price-align.has-half-full col[data-col="half"],
+table.price-align.has-half-full col[data-col="full"] { width: var(--w-large); }
+
+/* If the header set includes “50/100 pcs” ensure fixed width */
+table.price-align.has-50-100 col[data-col="50"],
+table.price-align.has-50-100 col[data-col="100"] { width: var(--w-medium); }
+
+/* If the header set includes a “32oz” or “1 plate” column, fix that too */
+table.price-align.has-portion col[data-col="portion"] { width: var(--w-small); }
+
+/* Mobile cards: we already show labels on the left with numbers on the right.
+   Keep them tidy and prevent squish/wrap issues. */
+@media (max-width:640px){
+  table.price-align td.num { text-align: right; }
+  table.price-align td.num > .price { min-width: auto; }
+}
+
+/* ===== PRICE ALIGNMENT (desktop + mobile) ===== */
+table.price-align{
+  /* per-column fixed widths (character units) */
+  --w-portion: 7ch;   /* e.g., 32oz / plate */
+  --w-half:    9ch;   /* Half tray */
+  --w-full:    9ch;   /* Full tray */
+  --w-50:      8ch;   /* 50 pieces */
+  --w-100:     8ch;   /* 100 pieces */
+}
+
+table.price-align th[data-col],
+table.price-align td[data-col]{
+  text-align: right;
+  white-space: nowrap;
+}
+
+table.price-align td.num{
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+table.price-align td.num > .price{
+  display: inline-block;
+  text-align: right;
+  white-space: nowrap;
+  /* default width if a data-col specific rule doesn’t match */
+  min-width: 8ch;
+}
+
+/* precise widths per detected column type */
+table.price-align th[data-col="portion"],
+table.price-align td[data-col="portion"] > .price{ min-width: var(--w-portion); }
+
+table.price-align th[data-col="half"],
+table.price-align td[data-col="half"] > .price{ min-width: var(--w-half); }
+
+table.price-align th[data-col="full"],
+table.price-align td[data-col="full"] > .price{ min-width: var(--w-full); }
+
+table.price-align th[data-col="50"],
+table.price-align td[data-col="50"] > .price{ min-width: var(--w-50); }
+
+table.price-align th[data-col="100"],
+table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
+
+/* Mobile-friendly: keep numbers right-aligned and non-wrapping */
+@media (max-width: 640px){
+  table.price-align td.num{ text-align: right; }
+  table.price-align td.num > .price{ min-width: auto; }
+}
+
+
+</style>
+
+<style id="modal-desktop-grid">
+  /* ---- Modal: image left, content right on desktop ---- */
+  @media (min-width: 900px){
+    .modal-dialog{
+      display: grid !important;
+      grid-template-columns: 48% 1fr;
+      grid-template-areas:
+        "media body"
+        "media footer";
+      max-height: min(86vh, 900px);
+      overflow: hidden; /* avoid inner scrollbars */
+    }
+    .modal-media{ grid-area: media; height: auto !important; min-height: 100%; }
+    .modal-body{ grid-area: body; padding: 18px 18px 10px; overflow: auto; }
+    .modal-footer{ grid-area: footer; padding: 12px 18px 18px; border-top: 1px solid #eee; }
+    .modal-media img{ height: 100%; object-fit: cover; }
+  }
+  /* keep mobile stacked as-is */
+  </style>
+  
+  <style>
+    /* --- Mobile polish & tap targets --- */
+    @media (max-width: 860px){
+      /* Open menu as a comfy vertical sheet */
+      .links{ display:none; }
+      .links.open{
+        display:block;
+        position:fixed; left:0; right:0; top:60px; bottom:auto;
+        background:#fff; border-top:1px solid #eee;
+        padding:8px 14px 14px; box-shadow:0 10px 24px rgba(0,0,0,.10);
+      }
+      .links a{
+        display:block;
+        padding:14px 12px;
+        font-size:1.05rem;
+        border-radius:10px;
+      }
+      .links a + a{ margin-top:6px; }
+      .links .cta{ text-align:center; }
+      /* Lock body when menu is open */
+      body.nav-open{ overflow:hidden; touch-action:none; }
+    }
+    
+    /* --- Hero compaction on small screens --- */
+    @media (max-width: 640px){
+      header.hero{ min-height:56vh; }
+      .hero h1{ font-size:clamp(1.35rem, 3.6vw + .8rem, 1.7rem); }
+      .hero p{ font-size:clamp(.92rem, 2.4vw + .7rem, 1rem); }
+      .logo{ width:80px; height:80px; }
+    }
+    
+    /* --- Weekend Specials: consistent banner crop & spacing --- */
+    #weekend-specials .ws-media img{
+      object-fit:cover;
+      aspect-ratio: 328 / 110; /* match your banner assets */
+    }
+    @media (max-width:640px){
+      #weekend-specials .ws-card{ border-radius:14px }
+      #weekend-specials .ws-media{ height:auto }
+      #weekend-specials .ws-body{ padding:12px 14px 14px }
+      #weekend-specials .ws-body h3{ font-size:1.02rem }
+      #weekend-specials .ws-body p{ font-size:.95rem; line-height:1.45 }
+    }
+    
+    /* --- Tables-as-cards: ensure tidy label column widths --- */
+    @media (max-width:640px){
+      tbody td{ gap:14px; }
+      tbody td:not(:first-child)::before{
+        min-width:7.5ch; /* keeps labels like “Half Tray” from wrapping oddly */
+        flex:0 0 auto;
+      }
+      td.num strong{ font-weight:800; letter-spacing:.2px }
+    }
+    
+    /* --- Sticky bars: avoid overlap with bottom actions --- */
+    @supports (padding: max(0px)){
+      .container{ padding-bottom: max(120px, env(safe-area-inset-bottom)); }
+    }
+
+
+    
+    </style>
+    
+
 </head>
 <body>
   <!-- Sticky Nav -->
@@ -303,6 +515,53 @@ body.editing .azure-tools{ display:flex }
   </section>
 
   <main class="container">
+    <!-- WEEKEND SPECIALS (stacked cards) -->
+    <section class="section" id="weekend-specials" aria-labelledby="weekend-title">
+      <div class="section-header">
+        
+        <h2 id="weekend-title">🫕 Diwali Specials</h2>
+      </div>
+
+      <div class="ws-list">
+        <!-- Card 1 -->
+        <article class="ws-card">
+          <div class="ws-media">
+            <img src="assets/specials_jalebi.png" alt="Jalebi" loading="lazy">
+          </div>
+          <div class="ws-body">
+            <h3>Jalebi</h3>
+            <p>Crisp golden swirls soaked in fragrant sugar syrup — a classic Indian sweet loved for its crunch and syrupy sweetness.</p>
+            <span class="tag">Diwali Special</span>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="ws-card">
+          <div class="ws-media">
+            <img src="assets/specials_mango_kesar_halwa.png" alt="Mango Kesar Halwa" loading="lazy">
+          </div>
+          <div class="ws-body">
+            <h3>Mango Kesar Halwa</h3>
+            <p>A royal fusion of tropical sweetness and aromatic saffron. A Rich halwa made with ripe mango pulp, saffron, and pure ghee — a golden, melt-in-mouth dessert bursting with tropical flavor.</p>
+            <span class="tag">Diwali Special</span>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <!-- <article class="ws-card">
+          <div class="ws-media">
+            <img src="assets/week_pulao.jpg" alt="Veg Pulao" loading="lazy">
+          </div>
+          <div class="ws-body">
+            <h3>Veg Pulao</h3>
+            <p>Aromatic basmati rice with seasonal vegetables — perfect as a main or side.</p>
+            <span class="tag">Weekend Special</span>
+          </div>
+        </article> -->
+      </div>
+    </section>
+
+
     <!-- MAIN COURSE -->
     <section class="section" id="main-course">
       <div class="section-header">
@@ -525,158 +784,44 @@ body.editing .azure-tools{ display:flex }
     const slidesWrap = document.querySelector('.hero-slides');
     window.addEventListener('load', () => slidesWrap?.classList.remove('init'));
 
-    const DISH_INFO = {
-      "Samosa": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Crispy pastry filled with spiced potatoes and peas. Served with chutney.",
-        ing: ["All-purpose flour crust", "Potato", "Green peas", "Carrot (optional)", "Ginger", "Spice blend", "Oil for frying"]
-      },
-      "Mix Vegetable Samosa": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Mixed veggie filling with homemade masalas.",
-        ing: ["Flour crust", "Potato", "Green peas", "Carrot", "Beetroot", "Cabbage", "Ginger", "Spices"]
-      },
-      "Dahi Vada": {
-        img: "assets/hero_dahivada-1280.jpg",
-        desc: "Lentil dumplings soaked in spiced yogurt, topped with masalas and chutneys.",
-        ing: ["Urad dal", "Yogurt", "Cumin & chili powder", "Tamarind & green chutney", "Coriander"]
-      },
-      "Veg Noodles": {
-        img: "assets/hero_chowmein-1280.jpg",
-        desc: "Stir‑fried noodles with peppers, cabbage, carrots, and a house sauce.",
-        ing: ["Wheat noodles", "Bell peppers", "Cabbage", "Carrot", "Soy & chili sauces", "Vinegar", "Ginger"]
-      },
-      "Gobi Manchurian": {
-        img: "assets/hero_chowmein-1280.jpg",
-        desc: "Crispy cauliflower tossed in tangy Manchurian sauce (no garlic).",
-        ing: ["Cauliflower", "Corn flour", "Soy & chili sauces", "Vinegar", "Ginger", "Spring herbs"]
-      },
-      "Mix Veg Manchurian": {
-        img: "assets/hero_chowmein-1280.jpg",
-        desc: "Vegetable dumplings in savory Manchurian gravy.",
-        ing: ["Mixed veg dumplings", "Corn flour", "Soy & chili sauces", "Ginger", "Herbs"]
-      },
-      "Gobi Chilly": {
-        img: "assets/hero_chowmein-1280.jpg",
-        desc: "Cauliflower tossed with peppers and chilies.",
-        ing: ["Cauliflower", "Bell peppers", "Green chilies", "Ginger", "Soy/chili sauces"]
-      },
-      "Paneer Chilly": {
-        img: "assets/hero_chowmein-1280.jpg",
-        desc: "Paneer cubes with peppers in a chili-style sauce (no garlic).",
-        ing: ["Paneer", "Bell peppers", "Green chilies", "Ginger", "Soy/chili sauces"]
-      },
-      "Kadahi Paneer": {
-        img: "assets/hero_kadhaipaneer-1280.jpg",
-        desc: "Paneer with capsicum and spices in a kadhai-style gravy.",
-        ing: ["Paneer", "Capsicum", "Tomato", "Kadhai spice mix", "Cream (optional)"]
-      },
-      "Palak Paneer": {
-        img: "assets/hero_kadhaipaneer-1280.jpg",
-        desc: "Paneer simmered in smooth spinach gravy.",
-        ing: ["Spinach", "Paneer", "Tomato", "Ginger", "Mild spices", "Cream (optional)"]
-      },
-      "Matar Paneer": {
-        img: "assets/hero_kadhaipaneer-1280.jpg",
-        desc: "Paneer and green peas in light tomato-based gravy.",
-        ing: ["Paneer", "Green peas", "Tomato", "Ginger", "Spices"]
-      },
-      "Butter Paneer Masala": {
-        img: "assets/hero_kadhaipaneer-1280.jpg",
-        desc: "Mildly spiced creamy paneer masala (no onion, no garlic).",
-        ing: ["Paneer", "Tomato", "Butter", "Cream", "Cashew (optional)", "Spices"]
-      },
-      "Soya Chaap Masala Curry": {
-        img: "assets/hero_kadhaipaneer-1280.jpg",
-        desc: "Mildly spiced Soya Chaap masala curry(no onion, no garlic).",
-        ing: ["Soya chaap", "Tomato", "Butter", "Cashew", "Spices"]
-      },
-      "Soya Chaap Afghani Curry": {
-        img: "assets/hero_kadhaipaneer-1280.jpg",
-        desc: "Mildly spiced creamy Soya Chaap (no onion, no garlic).",
-        ing: ["Soya chaap", "Tomato", "Butter", "Cream", "Cashew (optional)", "Spices"]
-      },
-      "Chhole": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Punjab-style chickpeas cooked with warm spices.",
-        ing: ["Chickpeas", "Tomato", "Ginger", "Chhole masala", "Tea decoction (optional)"]
-      },
-      "Rajma Masala": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Red kidney beans in homestyle gravy.",
-        ing: ["Kidney beans", "Tomato", "Ginger", "Spices"]
-      },
-      "Alu Gobi Matar (Semi Dry)": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Potatoes, cauliflower, and peas cooked semi-dry with spices.",
-        ing: ["Potato", "Cauliflower", "Green peas", "Tomato", "Ginger", "Spices"]
-      },
-      "Navratan Korma": {
-        img: "assets/hero_kadhaipaneer-1280.jpg",
-        desc: "Mixed vegetables in a mildly sweet, rich korma sauce.",
-        ing: ["Mixed vegetables", "Cashew/cream", "Tomato", "Spices", "Raisins (optional)"]
-      },
-      "Plain Rice": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Steamed rice, perfect with any curry.",
-        ing: ["Rice", "Water", "Salt (optional)"]
-      },
-      "Jeera Rice": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Fragrant cumin tempered rice.",
-        ing: ["Rice", "Cumin seeds", "Ghee/Oil", "Salt"]
-      },
-      "Dahi Bara Aloo Dum": {
-        img: "assets/hero_dahivada-1280.jpg",
-        desc: "Odia classic: dahi bara served with spicy aloo dum.",
-        ing: ["Urad dal vada", "Yogurt", "Spices", "Potato curry", "Coriander"]
-      },
-      "Odia Style Potato and Peas Chat": {
-        img: "assets/hero_dahivada-1280.jpg",
-        desc: "Comforting Odia snack with potatoes and peas.",
-        ing: ["Potato", "Yellow peas", "Tamarind", "Spices", "Coriander"]
-      },
-      "Poori and Upma with Guguni": {
-        img: "assets/hero_dahivada-1280.jpg",
-        desc: "Traditional combo served with Odisha-style yellow peas curry.",
-        ing: ["Poori", "Upma (semolina)", "Yellow peas curry", "Spices"]
-      },
-      "Mix Vegetable Curry (Odia Ghaanta)": {
-        img: "assets/hero_dahivada-1280.jpg",
-        desc: "Rustic mixed-veg curry from Odisha.",
-        ing: ["Mixed vegetables", "Dal (optional)", "Mustard/Jeera tempering", "Spices"]
-      },
-      "Alu Potala (Parval) Khurma (seasonal)": {
-        img: "assets/hero_dahivada-1280.jpg",
-        desc: "Seasonal pointed gourd curry with potatoes.",
-        ing: ["Potala (parval)", "Potato", "Tomato", "Spices"]
-      },
-      "Chhatu Rai": {
-        img: "assets/hero_dahivada-1280.jpg",
-        desc: "Mushroom curry in Odia style.",
-        ing: ["Mushroom", "Tomato", "Yogurt (optional)", "Spices"]
-      },
-      "Sooji Halwa": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Semolina halwa cooked with ghee and cardamom.",
-        ing: ["Semolina", "Ghee", "Sugar", "Cardamom", "Nuts (optional)"]
-      },
-      "Mango Kesari Halwa": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Kesari halwa infused with mango.",
-        ing: ["Semolina", "Ghee", "Sugar", "Mango pulp", "Cardamom"]
-      },
-      "Vermicelli Kheer": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Seviyan kheer simmered in milk.",
-        ing: ["Vermicelli", "Milk", "Sugar", "Cardamom", "Nuts (optional)"]
-      },
-      "Rice Kheer": {
-        img: "assets/hero_samosa-1280.jpg",
-        desc: "Classic rice pudding with cardamom.",
-        ing: ["Rice", "Milk", "Sugar", "Cardamom", "Nuts (optional)"]
-      }
-    };
+    window.DISH_INFO = Object.assign(window.DISH_INFO || {}, {
+  /* ----- Appetizers ----- */
+  "Samosa": { img: "assets/dishes/samosa.jpg", desc: "Crispy pastry stuffed with spiced potatoes & peas.", ing: ["Flour", "Potato", "Peas", "Spices", "Oil"] },
+  "Mix Vegetable Samosa": { img: "assets/dishes/mix-veg-samosa.jpg", desc: "Mixed veg filling in flaky pastry.", ing: ["Flour", "Mixed Vegetables", "Spices", "Oil"] },
+  "Alu Chop": { img: "assets/dishes/aloo-chop.jpg", desc: "Batter-fried spiced potato patties.", ing: ["Potato", "Gram Flour", "Spices"] },
+  "Dal Vada": { img: "assets/dishes/dal-vada.jpg", desc: "Crispy lentil fritters; crunchy outside, soft inside.", ing: ["Chana Dal", "Spices", "Oil"] },
+  "Dahi Vada": { img: "assets/dishes/dahi-vada.jpg", desc: "Lentil dumplings in chilled yogurt with spices.", ing: ["Urad Dal", "Yogurt", "Spices"] },
+
+  /* ----- Desi Chinese ----- */
+  "Veg Chowmein": { img: "assets/dishes/veg-chowmein.jpg", desc: "Stir-fried noodles with mixed veggies.", ing: ["Noodles", "Vegetables", "Soy-free Seasoning"] },
+  "Veg Noodles": { img: "assets/dishes/veg-noodles.jpg", desc: "Wok-tossed noodles, crunchy veg.", ing: ["Noodles", "Vegetables"] },
+  "Gobi Manchurian": { img: "assets/dishes/gobi-manchurian.jpg", desc: "Crispy cauliflower tossed in tangy gravy.", ing: ["Cauliflower", "Cornflour", "Spices"] },
+  "Mix Veg Manchurian": { img: "assets/dishes/mix-veg-manchurian.jpg", desc: "Veg dumplings in Indo-Chinese sauce.", ing: ["Mixed Veg", "Cornflour", "Spices"] },
+  "Paneer Chilly": { img: "assets/dishes/paneer-chilly.jpg", desc: "Paneer bites with peppers & spices.", ing: ["Paneer", "Peppers", "Spices"] },
+  "Gobi Chilly": { img: "assets/dishes/gobi-chilli.jpg", desc: "Crispy chilli cauliflower.", ing: ["Cauliflower", "Spices"] },
+
+  /* ----- Main Course (Paneer & Curries) ----- */
+  "Kadahi Paneer": { img: "assets/dishes/kadai-paneer.jpg", desc: "Paneer tossed with peppers & kadai masala.", ing: ["Paneer", "Peppers", "Tomato", "Spices"] },
+  "Butter Paneer Masala": { img: "assets/dishes/butter-paneer.jpg", desc: "Creamy tomato-based paneer curry.", ing: ["Paneer", "Tomato", "Cream/Butter (veg)", "Spices"] },
+  "Palak Paneer": { img: "assets/dishes/palak-paneer.jpg", desc: "Paneer simmered in fresh spinach gravy.", ing: ["Paneer", "Spinach", "Spices"] },
+  "Matar Paneer": { img: "assets/dishes/matar-paneer.jpg", desc: "Paneer & peas in homestyle gravy.", ing: ["Paneer", "Peas", "Tomato", "Spices"] },
+  "Navratan Korma": { img: "assets/dishes/navratan-korma.jpg", desc: "Rich korma with nine veggies & nuts.", ing: ["Mixed Veg", "Cashew", "Cream (veg)", "Spices"] },
+  "Chhole": { img: "assets/dishes/chole.jpg", desc: "Punjabi chickpea curry.", ing: ["Chickpeas", "Tomato", "Spices"] },
+  "Rajma Masala": { img: "assets/dishes/rajma.jpg", desc: "Kidney beans in homestyle gravy.", ing: ["Kidney Beans", "Tomato", "Spices"] },
+  "Alu Gobi Matar (Semi Dry)": { img: "assets/dishes/aloo-gobi-matar.jpg", desc: "Potato, cauliflower, peas—semi dry.", ing: ["Potato", "Cauliflower", "Peas", "Spices"] },
+  "Soya Chaap Masala Curry": { img: "assets/dishes/soya-chaap-masala.jpg", desc: "Chaap in spicy masala gravy.", ing: ["Soya Chaap", "Tomato", "Spices"] },
+  "Soya Chaap Afghani Curry": { img: "assets/dishes/soya-chaap-afghani.jpg", desc: "Creamy Afghani-style chaap.", ing: ["Soya Chaap", "Cream (veg)", "Spices"] },
+
+  /* ----- Rice & Staples ----- */
+  "Plain Rice": { img: "assets/dishes/plain-rice.jpg", desc: "Steamed basmati rice.", ing: ["Rice"] },
+  "Jeera Rice": { img: "assets/dishes/jeera-rice.jpg", desc: "Cumin-tempered basmati rice.", ing: ["Rice", "Cumin", "Oil/Ghee (veg)"] },
+
+  /* ----- Desserts ----- */
+  "Sooji Halwa": { img: "assets/dishes/sooji-halwa.jpg", desc: "Semolina halwa with nuts & cardamom.", ing: ["Semolina", "Sugar", "Ghee (veg)", "Nuts"] },
+  "Mango Kesari Halwa": { img: "assets/dishes/mango-kesari.jpg", desc: "Kesari with mango twist.", ing: ["Semolina", "Sugar", "Mango", "Ghee (veg)"] },
+  "Vermicelli Kheer": { img: "assets/dishes/vermicelli-kheer.jpg", desc: "Seviyan kheer with nuts.", ing: ["Vermicelli", "Milk (veg)", "Sugar", "Nuts"] },
+  "Rice Kheer": { img: "assets/dishes/rice-kheer.jpg", desc: "Creamy rice pudding.", ing: ["Rice", "Milk (veg)", "Sugar", "Nuts"] }
+});
 
     function guessImage(name){
       const n = name.toLowerCase();
@@ -896,5 +1041,204 @@ body.editing .azure-tools{ display:flex }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
 })();
 </script>
+
+<script>
+  (function(){
+    function norm(s){ return (s||'').replace(/\s+/g,' ').trim().toLowerCase(); }
+    function matchPriceHeaders(h2,h3){
+      const a = norm(h2), b = norm(h3);
+      const want = ['half tray','full tray','50 pcs','100 pcs','50 pieces','100 pieces'];
+      return want.some(w => a.includes(w) || b.includes(w));
+    }
+  
+    document.querySelectorAll('table').forEach(tbl=>{
+      const ths = tbl.querySelectorAll('thead th');
+      if (ths.length >= 3 && matchPriceHeaders(ths[2]?.textContent, ths[3]?.textContent || ths[1]?.textContent)){
+        tbl.classList.add('price-align');
+        tbl.querySelectorAll('tbody tr').forEach(tr=>{
+          // Right two columns only
+          const cols = [tr.children[ths.length-2], tr.children[ths.length-1]].filter(Boolean);
+          cols.forEach(td=>{
+            if (!td.querySelector('.price')){
+              const txt = (td.textContent||'').trim();
+              if (txt && txt.length < 16){ td.innerHTML = '<span class="price">'+txt+'</span>'; }
+            }
+          });
+        });
+      }
+    });
+  })();
+  </script>
+
+<script>
+  (function(){
+    const HEAD_MATCH = {
+      portion: ['32oz','1 plate','plate'],
+      half: ['half tray','half'],
+      full: ['full tray','full'],
+      '50': ['50 pcs','50 pieces','50'],
+      '100': ['100 pcs','100 pieces','100']
+    };
+  
+    function headerType(text) {
+      const t = (text||'').toLowerCase().trim();
+      for (const [key, arr] of Object.entries(HEAD_MATCH)) {
+        if (arr.some(k => t.includes(k))) return key;
+      }
+      return null;
+    }
+  
+    function buildColgroup(table) {
+      // Remove any existing colgroup we added earlier
+      table.querySelectorAll('colgroup[data-gen="align"]').forEach(cg => cg.remove());
+  
+      const ths = Array.from(table.querySelectorAll('thead th'));
+      if (!ths.length) return;
+  
+      const cg = document.createElement('colgroup');
+      cg.setAttribute('data-gen','align');
+      ths.forEach((th, i) => {
+        const col = document.createElement('col');
+        const type = headerType(th.textContent);
+        if (type === 'half')   col.setAttribute('data-col','half');
+        if (type === 'full')   col.setAttribute('data-col','full');
+        if (type === 'portion')col.setAttribute('data-col','portion');
+        if (type === '50')     col.setAttribute('data-col','50');
+        if (type === '100')    col.setAttribute('data-col','100');
+        cg.appendChild(col);
+      });
+  
+      table.insertBefore(cg, table.firstChild);
+  
+      // Add table-level flags for CSS
+      const types = ths.map(th => headerType(th.textContent));
+      if (types.includes('half') && types.includes('full')) table.classList.add('has-half-full');
+      if (types.includes('50') && types.includes('100')) table.classList.add('has-50-100');
+      if (types.includes('portion')) table.classList.add('has-portion');
+    }
+  
+    function wrapNumbers(table) {
+      table.querySelectorAll('tbody td.num').forEach(td => {
+        // Already wrapped?
+        if (td.querySelector('.price')) return;
+        const txt = td.textContent.trim();
+        if (!txt) return;
+        td.innerHTML = '<span class="price">' + txt + '</span>';
+      });
+    }
+  
+    // Apply to every pricing table
+    document.querySelectorAll('.table-wrap > table, section .table-wrap table').forEach(tbl => {
+      tbl.classList.add('price-align');
+      buildColgroup(tbl);
+      wrapNumbers(tbl);
+    });
+  
+    /* ---------- Modal image override via data-img on .dish-btn ---------- */
+    const modalImg = document.getElementById('dish-image');
+    const modalTitle = document.getElementById('dish-title');
+    const modalDesc = document.getElementById('dish-desc');
+    const modalIng = document.getElementById('dish-ingredients');
+    const modal = document.getElementById('dish-modal');
+  
+    function openWithData(el){
+      const name = el?.dataset?.dish || el?.textContent?.trim() || 'Dish';
+      const customImg = el?.dataset?.img;
+      const info = (window.DISH_INFO && window.DISH_INFO[name]) || {};
+      const img = customImg || info.img || (window.guessImage ? window.guessImage(name) : '');
+      const desc = info.desc || "Pure vegetarian/vegan preparation. No onion, no garlic, no eggs. Home-cooked fresh in small batches.";
+      const ing = info.ing || ["Ingredients vary by batch; always vegetarian, no onion, no garlic, no eggs."];
+  
+      modalTitle.textContent = name;
+      modalImg.src = img;
+      modalImg.alt = name;
+      modalDesc.textContent = desc;
+      modalIng.innerHTML = '';
+      ing.forEach(x => { const li = document.createElement('li'); li.textContent = x; modalIng.appendChild(li); });
+  
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+  
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.dish-btn');
+      if (btn) { e.preventDefault(); openWithData(btn); }
+    });
+  
+  })();
+  </script>
+  
+  <script>
+    (function(){
+      /* ---- header matching ---- */
+      const HEAD_MAP = {
+        portion: ['32oz','32 oz','quart','1 plate','plate'],
+        half: ['half tray','half-tray','half'],
+        full: ['full tray','full-tray','full'],
+        '50': ['50 pcs','50 pieces','50 pc','50'],
+        '100': ['100 pcs','100 pieces','100 pc','100']
+      };
+      const isNumLike = (t) => /[\d$]/.test((t||'').trim());
+    
+      const norm = s => (s||'').toLowerCase().replace(/\s+/g,' ').trim();
+      const headType = txt => {
+        const t = norm(txt);
+        for (const [k, vals] of Object.entries(HEAD_MAP)){
+          if (vals.some(v => t.includes(v))) return k;
+        }
+        return null;
+      };
+    
+      document.querySelectorAll('.table-wrap table, section table').forEach((tbl)=>{
+        const thead = tbl.querySelector('thead');
+        const tbody = tbl.querySelector('tbody');
+        if (!thead || !tbody) return;
+    
+        const ths = Array.from(thead.querySelectorAll('th'));
+        if (!ths.length) return;
+    
+        // Tag header cells with data-col and collect numeric column indexes
+        const numCols = [];
+        ths.forEach((th, i)=>{
+          const type = headType(th.textContent);
+          if (type){
+            th.setAttribute('data-col', type);
+            numCols.push({ i, type });
+          }
+        });
+    
+        // If nothing matched, nothing to do
+        if (!numCols.length) return;
+    
+        // Mark table and tag each cell in those columns
+        tbl.classList.add('price-align');
+    
+        Array.from(tbody.querySelectorAll('tr')).forEach(tr=>{
+          numCols.forEach(({i, type})=>{
+            const td = tr.children[i];
+            if (!td) return;
+            td.classList.add('num');
+            td.setAttribute('data-col', type);
+    
+            // Wrap plain text numeric content in <span class="price">
+            if (!td.querySelector('.price')){
+              const txt = (td.textContent||'').trim();
+              if (!txt) return;
+              // leave complex HTML (buttons, etc.) alone
+              if (td.children.length === 0 || (td.children.length === 1 && td.children[0].nodeType === 3)){
+                // If it looks numeric-ish, wrap it
+                if (isNumLike(txt)){
+                  td.innerHTML = '<span class="price">'+txt+'</span>';
+                }
+              }
+            }
+          });
+        });
+      });
+    })();
+    </script>
+    
+  
 </body>
 </html>
