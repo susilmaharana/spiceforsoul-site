@@ -555,6 +555,33 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
   a{color:#0f766e} a:hover{color:#115e59}
   </style>
   
+  <style id="recommended-css">
+    #recommended .rec-grid{
+      display:grid; gap:12px;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+    @media (max-width:900px){ #recommended .rec-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width:640px){ #recommended .rec-grid{ grid-template-columns: 1fr; } }
+    
+    #recommended .rec-card{
+      display:flex; gap:12px; align-items:stretch;
+      background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,.05); overflow:hidden;
+    }
+    #recommended .rec-img{
+      width:120px; height:120px; object-fit:cover; flex:0 0 120px;
+    }
+    #recommended .rec-body{ padding:10px 12px; display:flex; flex-direction:column; gap:6px; }
+    #recommended .rec-title{ font-weight:800; color:#0a684f; text-decoration:none; }
+    #recommended .rec-title:hover{ text-decoration:underline; }
+    #recommended .rec-desc{ margin:0; color:#3b4b45; }
+    #recommended .rec-tags{ display:flex; gap:8px; flex-wrap:wrap; }
+    #recommended .rec-tags span{
+      font-size:.8rem; font-weight:700; color:#075341;
+      border:1px dashed #cde9df; background:#eaf6f2; border-radius:999px; padding:.25rem .55rem;
+    }
+    </style>
+    
       
 </head>
 <body>
@@ -617,6 +644,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
 
   <main class="container">
     <!-- WEEKEND SPECIALS (stacked cards) -->
+    <!-- <section class="section" id="weekend-specials">  </section> -->
     <!-- <section class="section" id="weekend-specials" aria-labelledby="weekend-title">
       <div class="section-header">
         
@@ -707,22 +735,33 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Dish</th><th>32oz</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <thead><tr><th>Dish</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
           <tbody>
-            <tr><td><button class="dish-btn" data-dish="Chhole">Chhole</button></td><td class='num' data-label='32oz'><strong>12</strong></td><td class='num' data-label='Half Tray'><strong>45</strong></td><td class='num' data-label='Full Tray'><strong>80</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Rajma Masala">Rajma Masala</button></td><td class='num' data-label='32oz'><strong>12</strong></td><td class='num' data-label='Half Tray'><strong>45</strong></td><td class='num' data-label='Full Tray'><strong>80</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Hing Alu Sabzi">Hing Alu Sabzi</button></td><td class='num' data-label='32oz'><strong>12</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Alu Gobi Matar (Semi Dry)">Alu Gobi Matar (Semi Dry)</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Navratan Korma">Navratan Korma</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Palak Paneer">Palak Paneer</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Kadahi Paneer">Kadahi Paneer</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Matar Paneer">Matar Paneer</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Butter Paneer Masala">Butter Paneer Masala</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Paneer Lababdar">Paneer Lababdar</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Soya Chaap Masala Curry">Soya Chaap Masala Curry</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Soya Chaap Afghani Curry">Soya Chaap Afghani Curry</button></td><td class='num' data-label='32oz'><strong>14</strong></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Plain Rice">Plain Rice</button></td><td class='num' data-label='32oz'><strong>5</strong></td><td class='num' data-label='Half Tray'><strong>25</strong></td><td class='num' data-label='Full Tray'><strong>45</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Jeera Rice">Jeera Rice</button></td><td class='num' data-label='32oz'><strong>6</strong></td><td class='num' data-label='Half Tray'><strong>28</strong></td><td class='num' data-label='Full Tray'><strong>50</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Chikkad Chhole">Chhole - Chikkad</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Old Delhi Chhole">Chhole - Old Delhi Style</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Rajma Masala">Rajma Masala</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Hing Alu Sabzi">Hing Alu Sabzi</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Kadhi Pakora">Kadhi Pakora</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Gobi Matar (Semi Dry)">Alu Gobi Matar (Semi Dry)</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Gobi">Alu Gobi</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Gobi Rezala">Gobi Rezala</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Soya Chunks Curry">Alu Soya Chunks Curry</button></td><td class='num' data-label='Half Tray'><strong>50</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Bhindi Masala">Bhindi Masala</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Navratan Korma">Navratan Korma</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Palak Paneer">Palak Paneer</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Kadhai Paneer">Kadhai Paneer</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Matar Paneer">Matar Paneer</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Methi Matar Malai">Methi Matar Malai - Dhaba Style</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Butter Paneer Masala">Butter Paneer Masala</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Paneer Lababdar">Paneer Lababdar</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Malai Kofta">Malai Kofta Curry</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Paneer Afghani">Paneer Afghani</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Paneer Methi Chaman">Paneer Methi Chaman</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Soya Chaap Masala Curry">Soya Chaap Masala Curry</button></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Soya Chaap Afghani Curry">Soya Chaap Afghani Curry</button></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Soya Chaap Malai Curry">Soya Chaap Malai Curry</button></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Plain Rice">Plain Rice</button></td><td class='num' data-label='Half Tray'><strong>25</strong></td><td class='num' data-label='Full Tray'><strong>45</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Jeera Rice">Jeera Rice</button></td><td class='num' data-label='Half Tray'><strong>28</strong></td><td class='num' data-label='Full Tray'><strong>50</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -738,16 +777,17 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
         <table>
           <thead><tr><th>Dish</th><th>50 pcs</th><th>100 pcs</th></tr></thead>
           <tbody>
-            <tr><td><button class="dish-btn" data-dish="Mix Vegetable Samosa">Mix Vegetable Samosa</button></td><td class='num' data-label='40 pcs'><strong>75 (40 pcs)</strong></td><td class='num' data-label='80 pcs'><strong>145 (80 pcs)</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Samosa">Samosa</button></td><td class='num' data-label='40 pcs'><strong>75 (40 pcs)</strong></td><td class='num' data-label='80 pcs'><strong>145 (80 pcs)</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Cut Vegetable Samosa">Cut Vegetable Samosa</button></td><td class='num' data-label='40 pcs'><strong>80 (40 pcs)</strong></td><td class='num' data-label='80 pcs'><strong>155 (80 pcs)</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Samosa">Samosa</button></td><td class='num' data-label='40 pcs'><strong>80 (40 pcs)</strong></td><td class='num' data-label='80 pcs'><strong>155 (80 pcs)</strong></td></tr>
             <tr><td><button class="dish-btn" data-dish="Alu Chop">Aloo Chop (Aloo Bonda)</button></td><td class='num' data-label='50 pcs'><strong>75 (50 pcs)</strong></td><td class='num' data-label='100 pcs'><strong>145 (100 pcs)</strong></td></tr>
             <tr><td><button class="dish-btn" data-dish="Masala Vada">Masala Vada (Masala Bara)</button></td></td><td class='num' data-label='50 pcs'><strong>75 (50 pcs)</strong></td><td class='num' data-label='100 pcs'><strong>145 (100 pcs)</strong></td></tr>
             <tr><td><button class="dish-btn" data-dish="Dahi Vada">Dahi Vada (Dahi Bara)</button></td><td class='num' data-label='50 pcs'><strong>100 (50 pcs)</strong></td><td class='num' data-label='100 pcs'><strong>195 (100 pcs)</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Assorted Pakoras">Assorted Pakoras (Varities of vegetables)</button></td><td class='num' data-label='Half Tray'><strong>75</strong></td><td class='num' data-label='Full Tray'><strong>145</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Assorted Pakoras">Assorted Pakoras (Varities of vegetables)</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
             <tr><td><button class="dish-btn" data-dish="Bread Pakora">Bread Pakora</button></td><td class='num' data-label='50 pcs'><strong>100 (50 pcs)</strong></td><td class='num' data-label='100 pcs'><strong>195 (100 pcs)</strong></td></tr>
             <tr><td><button class="dish-btn" data-dish="Dal Kachori">Dal Kachori</button></td><td class='num' data-label='50 pcs'><strong>75 (50 pcs)</strong></td><td class='num' data-label='100 pcs'><strong>145 (100 pcs)</strong></td></tr>
             <tr><td><button class="dish-btn" data-dish="Cabbage Cutlet">Cabbage Cutlet</button></td><td class='num' data-label='50 pcs'><strong>75 (50 pcs)</strong></td><td class='num' data-label='100 pcs'><strong>145 (100 pcs)</strong></td></tr>
             <tr><td><button class="dish-btn" data-dish="Beetroot Cutlet">Beetroot Cutlet</button></td><td class='num' data-label='50 pcs'><strong>75 (50 pcs)</strong></td><td class='num' data-label='100 pcs'><strong>145 (100 pcs)</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Gobi 65 Dry">Gobi 65 Dry</button></td><td class='num' data-label='half-tray'><strong>60</strong></td><td class='num' data-label='full-tray'><strong>120</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -761,17 +801,17 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Dish</th><th>1 plate</th><th></th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <thead><tr><th>Dish</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
           <tbody>
-            <tr><td><button class="dish-btn" data-dish="Veg Chowmein">Veg Chowmein</button></td><td class='num' data-label='1 plate'><strong>9</strong></td><td class='num' data-label=''><strong></strong></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Veg Hakka Noodles">Veg Hakka Noodles</button></td><td class='num' data-label='1 plate'><strong>9</strong></td><td class='num' data-label=''><strong></strong></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Gobi Manchurian">Gobi Manchurian</button></td><td class='num' data-label='1 plate'><strong>10</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Mix Veg Manchurian">Mix Veg Manchurian</button></td><td class='num' data-label='1 plate'><strong>10</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Paneer Manchurian">Paneer Manchurian</button></td><td class='num' data-label='1 plate'><strong>10</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>130</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Gobi Chilly">Gobi Chilly</button></td><td class='num' data-label='1 plate'><strong>10</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Paneer Chilly">Paneer Chilly</button></td><td class='num' data-label='1 plate'><strong>11</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>130</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Soya Chilly">Soya Chilly</button></td><td class='num' data-label='1 plate'><strong>11</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>110</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Soya Chaap Chilly">Soya Chaap Chilly</button></td><td class='num' data-label='1 plate'><strong>11</strong></td><td class='num'></td><td class='num' data-label='Half Tray'><strong>75</strong></td><td class='num' data-label='Full Tray'><strong>145</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Veg Chowmein">Veg Chowmein</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Veg Hakka Noodles">Veg Hakka Noodles</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Gobi Manchurian">Gobi Manchurian</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Mix Veg Manchurian">Mix Veg Manchurian</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Paneer Manchurian">Paneer Manchurian</button></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Gobi Chilly">Gobi Chilly</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Paneer Chilly">Paneer Chilly</button></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>140</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Soya Chilly">Soya Chilly</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Soya Chaap Chilly">Soya Chaap Chilly</button></td><td class='num' data-label='Half Tray'><strong>70</strong></td><td class='num' data-label='Full Tray'><strong>140</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -785,18 +825,23 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Dish</th><th>32oz</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <thead><tr><th>Dish</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
           <tbody>
-            <tr><td><button class="dish-btn" data-dish="Dahi Bara Aloo Dum">Dahi Bara Aloo Dum</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Odia Style Potato and Peas Chat">Odia Style Potato and Peas Chat</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Poori and Upma with Guguni">Poori and Upma with Guguni</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Mix Vegetable Curry (Odia Ghaanta)">Mix Vegetable Curry (Odia Ghaanta)</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Alu Potala (Parval) Khurma (seasonal)">Alu Potala (Parval) Khurma (seasonal)</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Chhatu Rai">Chhatu Rai</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Idli">Idli</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>40 (60 pcs)</td><td class='call' data-label='Full Tray'>80 (120 pcs)</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Ghuguni">Ghuguni</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>45</td><td class='call' data-label='Full Tray'>80</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Poori">Poori</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>50 (60 pcs)</td><td class='call' data-label='Full Tray'>100 (130 pcs)</td></tr>
-            <tr><td><button class="dish-btn" data-dish="Mix Veg Upma">Mix Veg Upma</button></td><td class='call' data-label='32oz'>Call</td><td class='call' data-label='Half Tray'>50</td><td class='call' data-label='Full Tray'>100</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Dahi Bara Aloo Dum">Dahi Bara Aloo Dum</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Odia Style Potato and Peas Chat">Odia Style Potato and Peas Chat</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Poori and Upma with Guguni">Poori and Upma with Guguni</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Mix Vegetable Curry (Odia Ghaanta)">Mix Vegetable Curry (Odia Ghaanta)</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Dahi Baigana">Dahi Baigana</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Baigana Khata">Baigana Tentuli Khata</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Besan Alu">Besan Alu</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Janhi Alu Posto">Janhi Alu Posto</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Potala (Parval) Khurma (seasonal)">Alu Potala (Parval) Khurma (seasonal)</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Alu Panasa Masala">Alu Panasa(Jackfruit) Masala</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Chhatu Rai">Chhatu Rai</button></td><td class='call' data-label='Half Tray'>Call</td><td class='call' data-label='Full Tray'>Call</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Idli">Idli</button></td><td class='call' data-label='Half Tray'>50 (60 pcs)</td><td class='call' data-label='Full Tray'>90 (120 pcs)</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Ghuguni">Ghuguni</button></td><td class='call' data-label='Half Tray'>45</td><td class='call' data-label='Full Tray'>90</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Poori">Poori</button></td><td class='call' data-label='Half Tray'>50 (60 pcs)</td><td class='call' data-label='Full Tray'>100 (120 pcs)</td></tr>
+            <tr><td><button class="dish-btn" data-dish="Mix Veg Upma">Mix Veg Upma</button></td><td class='call' data-label='Half Tray'>50</td><td class='call' data-label='Full Tray'>100</td></tr>
           </tbody>
         </table>
       </div>
@@ -810,13 +855,13 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Dish</th><th>32oz</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
+          <thead><tr><th>Dish</th><th>Half Tray</th><th>Full Tray</th></tr></thead>
           <tbody>
-            <tr><td><button class="dish-btn" data-dish="Sooji Halwa">Sooji Halwa</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Mango Kesari Halwa">Mango Kesari Halwa</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Vermicelli Kheer">Vermicelli Kheer</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Rice Kheer">Rice Kheer</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>55</strong></td><td class='num' data-label='Full Tray'><strong>100</strong></td></tr>
-            <tr><td><button class="dish-btn" data-dish="Jalebi">Jalebi (min 50 piece)</button></td><td class='num' data-label='32oz'></td><td class='num' data-label='Half Tray'><strong>Call</strong></td><td class='num' data-label='Full Tray'><strong>Call</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Sooji Halwa">Sooji Halwa</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Mango Kesari Halwa">Mango Kesari Halwa</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Vermicelli Kheer">Vermicelli Kheer</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Rice Kheer">Rice Kheer</button></td><td class='num' data-label='Half Tray'><strong>60</strong></td><td class='num' data-label='Full Tray'><strong>120</strong></td></tr>
+            <tr><td><button class="dish-btn" data-dish="Jalebi">Jalebi (min 50 piece)</button></td><td class='num' data-label='Half Tray'><strong>Call</strong></td><td class='num' data-label='Full Tray'><strong>Call</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -898,8 +943,12 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
       </div>
       <div class="modal-body">
         <h3 id="dish-title">Dish</h3>
-        <p id="dish-desc">Pure vegetarian/vegan preparation. No onion, no garlic, no eggs. Home-cooked fresh in small batches.</p>
-        <ul id="dish-ingredients" class="ingredients"></ul>
+        <!-- <p id="dish-desc">Pure vegetarian/vegan preparation. No onion, no garlic, no eggs. Home-cooked fresh in small batches.</p>
+        <ul id="dish-ingredients" class="ingredients"></ul> -->
+        <!-- Add inside #dish-modal content -->
+        <div id="dish-desc" class="dish-desc"></div>
+        <ul id="dish-ingredients" class="dish-ingredients"></ul>
+
         <div class="modal-tags">
           <span class="tag">Vegetarian</span>
           <span class="tag">No onion</span>
@@ -1464,5 +1513,282 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
         })();
         </script>
         
+
+        <script id="auto-dish-modal-and-recommended">
+          (function(){
+            const norm = s => (s||"").toLowerCase().replace(/\s+/g," ").trim();
+          
+            // --- 1) Detect DISH NAMES from DOM (first td in menu tables + [data-dish]) ---
+            function collectDishes(){
+              const seen = new Set();
+              const dishes = [];
+          
+              // data-dish
+              document.querySelectorAll('[data-dish]').forEach(el=>{
+                const name = (el.getAttribute('data-dish')||el.textContent||"").trim();
+                if(name && !seen.has(norm(name))){ seen.add(norm(name)); dishes.push(name); }
+              });
+          
+              // first-column cells in tables
+              document.querySelectorAll('.table-wrap table tbody tr, section table tbody tr').forEach(tr=>{
+                const td = tr.querySelector('td'); if(!td) return;
+                const name = (td.textContent||"").trim();
+                if(!name) return;
+                if (/^(name|item|dish|menu|description)$/i.test(name)) return;
+                if(!seen.has(norm(name))){ seen.add(norm(name)); dishes.push(name); }
+              });
+          
+              return dishes;
+            }
+          
+            // --- 2) Base info map (rich descriptions for common items) ---
+            const BASE_INFO = {
+              "Samosa": {desc:"Flaky pastry with spiced potato & peas—crisp outside, soft inside.",
+                ing:["Potato","Green peas","Ginger","Green chili","Coriander","Garam masala","Salt","Wheat flour","Oil"],
+                img:"assets/dishes/samosa.jpg"},
+              "Mix Vegetable Samosa": {desc:"Mixed-veg filling (potato, peas, carrot, beans) in a crisp pastry.",
+                ing:["Potato","Peas","Carrot","Beans","Ginger","Coriander","Garam masala","Salt","Wheat flour","Oil"],
+                img:"assets/dishes/mix-veg-samosa.jpg"},
+              "Alu Chop": {desc:"Odia-style potato fritter—lightly spiced gram-flour crust, tender center.",
+                ing:["Potato","Gram flour (besan)","Turmeric","Red chili","Cumin","Salt","Oil"],
+                img:"assets/dishes/alu-chop.jpg"},
+              "Alu Chop (Aloo Bonda)": {desc:"Potato dumplings coated in gram flour and fried crispy—perfect tea-time snack.",
+                ing:["Potato","Gram flour (besan)","Turmeric","Red chili","Cumin","Salt","Oil"],
+                img:"assets/dishes/alu-chop.jpg"},
+              "Dal Vada": {desc:"Crunchy lentil fritters with gentle spice—great with chutneys.",
+                ing:["Chana dal","Ginger","Green chili","Cumin","Salt","Oil"],
+                img:"assets/dishes/dal-vada.jpg"},
+              "Masala Vada": {desc:"South-Indian style chana dal fritter with bold spices and herbs.",
+                ing:["Chana dal","Onion-free herbs","Curry leaves (optional)","Green chili","Red chili","Salt","Oil"],
+                img:"assets/dishes/masala-vada.jpg"},
+              "Masala Vada (Masala Bara)": {desc:"Crisp outside, soft inside—lentil vadas with a punch of spices.",
+                ing:["Chana dal","Onion-free herbs","Curry leaves (optional)","Green chili","Red chili","Salt","Oil"],
+                img:"assets/dishes/masala-vada.jpg"},
+              "Dahi Vada": {desc:"Soft lentil dumplings in seasoned yogurt—cooling & balanced.",
+                ing:["Urad dal","Yogurt","Cumin","Black pepper","Sugar","Salt","Oil"],
+                img:"assets/dishes/dahi-vada.jpg"},
+              "Dahi Vada (Dahi Bara)": {desc:"Odia-style dahi bara—soft vadas soaked in tangy yogurt with spices.",
+                ing:["Urad dal","Yogurt","Cumin","Black salt","Sugar","Coriander","Oil"],
+                img:"assets/dishes/dahi-bara.jpg"},
+              "Assorted Pakoras": {desc:"Variety of vegetable fritters—lightly spiced, crisp & addictive.",
+                ing:["Seasonal vegetables","Gram flour (besan)","Turmeric","Carom seeds","Red chili","Salt","Oil"],
+                img:"assets/dishes/assorted-pakoras.jpg"},
+              "Assorted Pakoras (Varities of vegetables)": {desc:"Mixed vegetable pakoras—crisp batter around seasonal veggies.",
+                ing:["Seasonal vegetables","Gram flour (besan)","Turmeric","Carom seeds","Red chili","Salt","Oil"],
+                img:"assets/dishes/assorted-pakoras.jpg"},
+              "Bread Pakora": {desc:"Bread slices stuffed and dipped in besan batter, fried golden.",
+                ing:["Bread","Potato (for stuffing)","Gram flour","Turmeric","Chili","Salt","Oil"],
+                img:"assets/dishes/bread-pakora.jpg"},
+          
+              "Veg Chowmein": {desc:"Wok-tossed noodles with crunchy veggies—savory Indo-Chinese flavor.",
+                ing:["Noodles","Cabbage","Carrot","Capsicum","Ginger","Vinegar","Tamari/seasoning","Salt","Oil"],
+                img:"assets/dishes/veg-chowmein.jpg"},
+              "Veg Fried Rice": {desc:"Fragrant rice tossed with veggies—light, satisfying, gently spiced.",
+                ing:["Cooked rice","Carrot","Peas","Capsicum","Pepper","Tamari/seasoning","Salt","Oil"],
+                img:"assets/dishes/veg-fried-rice.jpg"},
+              "Paneer Manchurian": {desc:"Crisp paneer in a tangy, peppery gravy—onion/garlic-free version.",
+                ing:["Paneer","Capsicum","Cornstarch","Tomato base","Vinegar","Pepper","Salt","Oil"],
+                img:"assets/dishes/paneer-manchurian.jpg"},
+          
+              "Kadai Paneer": {desc:"Paneer simmered in roasted spices & tomatoes; bold & aromatic.",
+                ing:["Paneer","Tomato","Capsicum","Coriander","Cumin","Kashmiri chili","Kasuri methi","Ghee/Oil","Salt"],
+                img:"assets/dishes/kadai-paneer.jpg"},
+              "Paneer Lababdar": {desc:"Rich, creamy tomato-cashew gravy with paneer—restaurant-style.",
+                ing:["Paneer","Tomato","Cashew","Cream","Butter","Kashmiri chili","Garam masala","Kasuri methi","Salt"],
+                img:"assets/dishes/paneer-lababdar.jpg"},
+              "Navratan Korma": {desc:"Mild, creamy curry with mixed veg & nuts—lightly sweet, festive classic.",
+                ing:["Mixed vegetables","Cashew","Cream","Paneer (optional)","Raisins","Cardamom","Kesar (optional)","Ghee/Oil","Salt"],
+                img:"assets/dishes/navratan-korma.jpg"},
+              "Jeera Rice": {desc:"Fragrant basmati tempered with cumin—perfect with rich curries.",
+                ing:["Basmati rice","Cumin","Ghee/Oil","Salt"],
+                img:"assets/dishes/jeera-rice.jpg"},
+              "Khichdi (Satvik)": {desc:"Home-style rice & moong dal—light, nourishing, gently spiced.",
+                ing:["Rice","Moong dal","Cumin","Turmeric","Ghee/Oil","Salt"],
+                img:"assets/dishes/week_khichdi.jpg"},
+              "Veg Pulao": {desc:"Aromatic basmati rice with seasonal vegetables—great for gatherings.",
+                ing:["Basmati rice","Mixed vegetables","Whole spices","Ghee/Oil","Salt"],
+                img:"assets/dishes/week_pulao.jpg"},
+              "Dahi Bara": {desc:"Odia-style soft vadas in tangy yogurt—refreshing and comforting.",
+                ing:["Urad dal","Yogurt","Cumin","Black salt","Sugar","Coriander","Oil"],
+                img:"assets/dishes/week_dahi_bara.jpg"},
+          
+              "Khichdi": {desc:"Comforting rice & dal cooked soft with mild spices—easy on the stomach.",
+                ing:["Rice","Moong dal","Cumin","Turmeric","Salt","Ghee/Oil"],
+                img:"assets/dishes/khichdi.jpg"},
+              "Pasta (Veg)": {desc:"Creamy, kid-friendly pasta with veggies; no eggs.",
+                ing:["Pasta","Milk/Cream","Butter","Cheese","Mixed vegetables","Salt","Pepper"],
+                img:"assets/dishes/pasta.jpg"},
+          
+              "Jalebi": {desc:"Crisp spirals soaked in saffron-cardamom syrup—festive favorite.",
+                ing:["Flour","Yogurt (ferment)","Sugar","Saffron","Cardamom","Lemon","Oil/Ghee"],
+                img:"assets/dishes/jalebi.jpg"},
+              "Mango Kesar Halwa": {desc:"Silky halwa with mango & saffron—ghee-glossed, gently sweet.",
+                ing:["Semolina","Mango pulp","Milk","Sugar","Ghee","Kesar","Cardamom"],
+                img:"assets/dishes/mango-kesar-halwa.jpg"}
+            };
+          
+            // --- 3) Fallback description for any missing dish ---
+            function genericFor(name){
+              const n = (name||"").trim();
+              const lower = n.toLowerCase();
+              let desc = `${n} — prepared fresh in our pure vegetarian, no-onion/no-garlic kitchen.`;
+              let ing = ["Vegetarian","No onion","No garlic","Clean spices","Home-style"];
+              if (/(paneer|korma|kadai|lababdar|butter)/i.test(lower)){
+                desc = `${n} — rich, restaurant-style curry with balanced spices (onion/garlic-free).`;
+                ing = ["Paneer / Mixed veg","Tomato base","Cashew/Cream (where applicable)","Coriander","Cumin","Kashmiri chili","Kasuri methi","Salt","Oil/Ghee"];
+              } else if (/(rice|fried rice|jeera|pulao)/i.test(lower)){
+                desc = `${n} — fragrant rice, gently spiced and cooked to fluffy perfection.`;
+                ing = ["Basmati rice","Cumin/pepper","Vegetables (if applicable)","Salt","Oil/Ghee"];
+              } else if (/(chowmein|noodle)/i.test(lower)){
+                desc = `${n} — wok-tossed noodles with crunchy veggies; Indo-Chinese style.`;
+                ing = ["Noodles","Cabbage/Carrot/Capsicum","Pepper","Vinegar","Tamari/seasoning","Salt","Oil"];
+              } else if (/(samosa|vada|pakora|pakoda|chop|roll)/i.test(lower)){
+                desc = `${n} — crispy, golden snack; perfect with our chutneys.`;
+                ing = ["Gram/Wheat flour","Potato/Vegetables/Lentils","Turmeric","Cumin","Salt","Oil"];
+              } else if (/(halwa|jalebi|sweet|kheer)/i.test(lower)){
+                desc = `${n} — classic Indian sweet, balanced and aromatic.`;
+                ing = ["Semolina/Flour","Milk/Ghee","Sugar","Cardamom","Saffron (optional)"];
+              } else if (/(khichdi|kichdi)/i.test(lower)){
+                desc = `${n} — nourishing rice & dal cooked soft with mild spices.`;
+                ing = ["Rice","Moong dal","Cumin","Turmeric","Salt","Ghee/Oil"];
+              } else if (/pasta/i.test(lower)){
+                desc = `${n} — creamy, kid-friendly pasta with veggies; no eggs.`;
+                ing = ["Pasta","Milk/Cream","Butter","Cheese","Vegetables","Salt","Pepper"];
+              }
+              const img = `assets/dishes/${lower.replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')||'dish' }.jpg`;
+              return {desc, ing, img};
+            }
+          
+            // --- 4) Ensure modal scaffold exists ---
+            function ensureModal(){
+              let modal = document.getElementById('dish-modal');
+              if(modal) return modal;
+              modal = document.createElement('div');
+              modal.id = 'dish-modal';
+              modal.className = 'modal';
+              modal.setAttribute('aria-hidden','true');
+              modal.innerHTML = `
+                <div class="modal-dialog">
+                  <div class="modal-media"><img id="modal-img" alt="" loading="lazy"></div>
+                  <div class="modal-body">
+                    <button class="modal-close" aria-label="Close" data-close="true">✕</button>
+                    <h3 id="modal-title"></h3>
+                    <div class="dish-desc"></div>
+                    <h4 class="ing-title">Ingredients</h4>
+                    <ul class="dish-ingredients"></ul>
+                  </div>
+                </div>`;
+              document.body.appendChild(modal);
+          
+              function closeModal(){
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden','true');
+                document.body.style.overflow='';
+              }
+              modal.addEventListener('click', e=>{
+                if(e.target.classList.contains('modal') ||
+                   e.target.classList.contains('modal-backdrop') ||
+                   e.target.dataset.close==='true' ||
+                   e.target.classList.contains('modal-close')) closeModal();
+              });
+              document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+          
+              return modal;
+            }
+          
+            function fillAndOpenModal(name, info){
+              const modal = ensureModal();
+              const title = modal.querySelector('#modal-title');
+              const descBox = modal.querySelector('.dish-desc');
+              const ingList = modal.querySelector('.dish-ingredients');
+              const imgEl = modal.querySelector('#modal-img');
+          
+              if(title) title.textContent = name;
+              if(descBox) descBox.textContent = info.desc || "";
+              if(ingList){
+                ingList.innerHTML = "";
+                (info.ing||[]).forEach(x=>{ const li=document.createElement('li'); li.textContent=x; ingList.appendChild(li); });
+              }
+              if(imgEl && info.img){ imgEl.src = info.img; imgEl.alt = name; }
+          
+              modal.classList.add('show');
+              modal.setAttribute('aria-hidden','false');
+              document.body.style.overflow='hidden';
+            }
+          
+            // --- 5) Bind click handlers to every detected dish ---
+            function bindDishClicks(){
+              // First cell in each row
+              document.querySelectorAll('.table-wrap table tbody tr, section table tbody tr').forEach(tr=>{
+                const td = tr.querySelector('td'); if(!td) return;
+                const btn = td.querySelector('.dish-btn');
+                const name = btn ? (btn.getAttribute('data-dish')||btn.textContent||"").trim()
+                                 : (td.textContent||"").trim();
+                if(!name) return;
+                (btn || td).style.cursor = 'pointer';
+                (btn || td).addEventListener('click', e=>{
+                  e.preventDefault && e.preventDefault();
+                  const info = BASE_INFO[name] || genericFor(name);
+                  fillAndOpenModal(name, info);
+                });
+              });
+          
+              // Any extra [data-dish] elements
+              document.querySelectorAll('[data-dish]').forEach(el=>{
+                el.addEventListener('click', e=>{
+                  e.preventDefault && e.preventDefault();
+                  const name = (el.getAttribute('data-dish')||el.textContent||"").trim();
+                  const info = BASE_INFO[name] || genericFor(name);
+                  fillAndOpenModal(name, info);
+                });
+              });
+            }
+          
+            // --- 6) Insert Recommended section (after Weekend Specials) ---
+            function insertRecommended(dishes){
+              if(!dishes.length) return;
+              const picks = dishes.slice(0, 3);
+              const cards = picks.map(name=>{
+                const info = BASE_INFO[name] || genericFor(name);
+                return `
+                <article class="rec-card" role="listitem">
+                  <img class="rec-img" src="${info.img}" alt="${name}" loading="lazy">
+                  <div class="rec-body">
+                    <a class="rec-title" href="#" data-dish="${name}">${name}</a>
+                    <p class="rec-desc">Customer favorite—highly requested.</p>
+                    <div class="rec-tags"><span>Popular</span><span>Recommended</span></div>
+                  </div>
+                </article>`;
+              }).join("");
+          
+              const block = document.createElement('section');
+              block.className = 'section';
+              block.id = 'recommended';
+              block.setAttribute('aria-labelledby','recommended-title');
+              block.innerHTML = `
+                <div class="section-header">
+                  <h2 id="recommended-title">⭐ Recommended | Customer Favorites</h2>
+                </div>
+                <div class="rec-grid" role="list">
+                  ${cards}
+                </div>`;
+          
+              const weekend = document.querySelector('#weekend-specials');
+              if(weekend && weekend.parentNode){
+                weekend.parentNode.insertBefore(block, weekend.nextSibling);
+              }else{
+                document.body.appendChild(block);
+              }
+            }
+          
+            // --- 7) Run all on DOM ready ---
+            document.addEventListener('DOMContentLoaded', function(){
+              const dishes = collectDishes();
+              insertRecommended(dishes);
+              bindDishClicks();
+            });
+          })();
+          </script>
+          
 </body>
 </html>
