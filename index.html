@@ -79,9 +79,9 @@
     /* Layout & Tables */
     .container{max-width:1000px;margin:30px auto;padding:0 16px 120px}
     .section{margin:26px 0; scroll-margin-top:80px;}
-    .section h2{margin:0 0 10px; color:var(--brand); font-size:1.06rem; font-weight:800; border-bottom:2px solid var(--brand); display:inline-block; padding-bottom:6px}
+    .section h2{margin:0 0 0px; color:var(--brand); font-size:1.26rem; font-weight:800; border-bottom:2px solid var(--brand); display:inline-block; padding-bottom:6px}
     .section-header{ display:flex; align-items:center; gap:10px; }
-    .mthumb{ width:34px; height:34px; border-radius:8px; object-fit:cover; display:none; }
+    .mthumb{ width:34px; height:34px; border-radius:8px; object-fit:cover; }
     @media (max-width:640px){ .mthumb{ display:inline-block } }
 
     .table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch}
@@ -441,6 +441,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
       tbody td:not(:first-child)::before{
         min-width:7.5ch; /* keeps labels like “Half Tray” from wrapping oddly */
         flex:0 0 auto;
+        text-align: left;
       }
       td.num strong{ font-weight:800; letter-spacing:.2px }
     }
@@ -529,31 +530,6 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
         #testimonials .t-author{ color:var(--brand); font-weight:800; }
         #testimonials .t-dot{ opacity:.5 }
       </style>
-
-<style id="theme-clean-accent">
-  :root{
-    --brand:#0a684f; --brand-700:#075341; --line:#e5e7eb; --ink:#0b1730;
-    --muted:#6b7280; --paper:#fff; --saffron:#ff8a00;
-  }
-  /* Nav */
-  .sticky-nav, .top-nav{background:#ffffffcc; backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
-  .sticky-nav a:hover{color:var(--brand-700)}
-  /* Section headers */
-  .section .section-header h2{
-    padding-bottom:.35rem; border-bottom:3px solid #ffd9b0; display:inline-block;
-  }
-  /* Buttons */
-  .btn, button{background:var(--brand); border:none; color:#fff; border-radius:10px; font-weight:800}
-  .btn:hover, button:hover{background:var(--brand-700)}
-  /* Tables */
-  table thead th{background:#fff; color:#4b2b0b; border-bottom:2px solid #ffd9b0}
-  table tbody tr:nth-child(odd){background:#fffefb}
-  .table-wrap td:first-child{font-weight:800; color:var(--ink)}
-  /* Cards */
-  .ws-card, .t-card{border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.05)}
-  /* Links */
-  a{color:#0f766e} a:hover{color:#115e59}
-  </style>
   
           <style id="modal-desktop-grid">
       @media (min-width: 900px){
@@ -645,7 +621,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
   }
   /* Buttons */
   .btn, button{background:var(--brand); border:none; color:#fff; border-radius:10px; font-weight:800}
-  .btn:hover, button:hover{background:var(--brand-700)}
+  /* .btn:hover, button:hover{background:var(--brand-700)} */
   /* Tables */
   table thead th{background:#fff; color:#4b2b0b; border-bottom:2px solid #ffd9b0}
   table tbody tr:nth-child(odd){background:#fffefb}
@@ -826,64 +802,12 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     </article>
   </div>
 </section>
-      </div>
-    </section> -->
-
-    <!-- TESTIMONIALS -->
-<section class="section" id="testimonials" aria-labelledby="testimonials-title">
-  <div class="section-header">
-    <h2 id="testimonials-title">💬 What Customers Say</h2>
-  </div>
-
-  <div class="t-grid" role="list">
-    <!-- Card 1 -->
-    <article class="t-card" role="listitem">
-      <div class="t-stars" aria-hidden="true">★★★★★</div>
-      <blockquote class="t-quote">
-        “Pure comfort! The kadahi paneer and jeera rice tasted just like home.
-        Love the no onion/no garlic clarity.”
-      </blockquote>
-      <div class="t-meta">
-        <span class="t-author">Aparna S.</span>
-        <span class="t-dot">•</span>
-        <span class="t-place">Bellevue</span>
-      </div>
-    </article>
-
-    <!-- Card 2 -->
-    <article class="t-card" role="listitem">
-      <div class="t-stars" aria-hidden="true">★★★★★</div>
-      <blockquote class="t-quote">
-        “Weekend specials were a hit at our party—fresh, clean flavors and great portions.”
-      </blockquote>
-      <div class="t-meta">
-        <span class="t-author">Rahul M.</span>
-        <span class="t-dot">•</span>
-        <span class="t-place">Redmond</span>
-      </div>
-    </article>
-
-    <!-- Card 3 -->
-    <article class="t-card" role="listitem">
-      <div class="t-stars" aria-hidden="true">★★★★★</div>
-      <blockquote class="t-quote">
-        “Dahi vada was perfectly balanced and the desserts were delightful.
-        Ordering again!”
-      </blockquote>
-      <div class="t-meta">
-        <span class="t-author">Nisha K.</span>
-        <span class="t-dot">•</span>
-        <span class="t-place">Kirkland</span>
-      </div>
-    </article>
-  </div>
-</section>
 
     <!-- MAIN COURSE -->
     <section class="section" id="main-course">
       <div class="section-header">
         <img class="mthumb" src="assets/thumb_hero_samosa.jpg" alt="Main course" loading="lazy">
-        <h2>🍛 Main Course</h2>
+        <h2>Main Course</h2>
       </div>
       <div class="table-wrap">
         <table>
@@ -923,7 +847,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     <section class="section" id="appetizers">
       <div class="section-header">
         <img class="mthumb" src="assets/thumb_hero_dahivada.jpg" alt="Appetizers" loading="lazy">
-        <h2>🥟 Appetizers</h2>
+        <h2>Appetizers</h2>
       </div>
       <div class="table-wrap">
         <table>
@@ -949,7 +873,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     <section class="section" id="desi-chinese">
       <div class="section-header">
         <img class="mthumb" src="assets/thumb_hero_chowmein.jpg" alt="Chow mein" loading="lazy">
-        <h2>🥢 Desi Chinese</h2>
+        <h2>Desi Chinese</h2>
       </div>
       <div class="table-wrap">
         <table>
@@ -973,7 +897,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     <section class="section" id="odisha">
       <div class="section-header">
         <img class="mthumb" src="assets/thumb_hero_kadhaipaneer.jpg" alt="Odisha specials" loading="lazy">
-        <h2>🌾 Regional Special (Odisha)</h2>
+        <h2>Regional Special (Odisha)</h2>
       </div>
       <div class="table-wrap">
         <table>
@@ -1003,7 +927,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     <section class="section" id="desserts">
       <div class="section-header">
         <img class="mthumb" src="assets/thumb_hero_samosa.jpg" alt="Desserts" loading="lazy">
-        <h2>🍮 Desserts</h2>
+        <h2>Desserts</h2>
       </div>
       <div class="table-wrap">
         <table>
@@ -1022,23 +946,6 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     <hr/>
     <br/>
 
-    <!-- ALLERGENS -->
-    <!-- <section class="section" id="allergens" aria-labelledby="allergen-title">
-    <!-- <section class="section" id="allergens" aria-labelledby="allergen-title">
-      <h2 id="allergen-title">⚠️ Allergen & Kitchen Notice</h2>
-      <div class="notice" role="note" aria-label="Allergen notice">
-        <h3><span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-        </span> Please read before ordering</h3>
-        <p>We cook in a <strong>purely vegetarian home kitchen</strong> — <em>no onion, no garlic, no eggs</em>. Some dishes contain dairy and nuts. </p>
-        <ul>
-          <li>While we take care to avoid cross‑contact, our kitchen is <strong>not certified allergen‑free</strong>.</li>
-          <li>If you need ingredient specifics for a dish, tap the dish name to view its details.</li>
-        </ul>
-      </div>
-    </section> -->
-    </section> -->
-
     <!-- CONTACT -->
     <section class="section" id="contact">
       <div class="section-header">
@@ -1053,20 +960,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
         <div class="contact-card" role="listitem">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           <a href="mailto:spiceforsoul@outlook.com">spiceforsoul@outlook.com</a>
-          <a href="mailto:spiceforsoul@outlook.com">spiceforsoul@outlook.com</a>
         </div>
-        <!-- <div class="contact-card" role="listitem">
-        <!-- <div class="contact-card" role="listitem">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
-          <span>Bellevue, WA</span>
-        </div> -->
-        <!-- <div class="contact-card" role="listitem">
-        </div> -->
-        <!-- <div class="contact-card" role="listitem">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.9 2.1a1 1 0 011.2 0l9 6.75A1 1 0 0121 10H3a1 1 0 01-.6-1.84l8.5-6.06zM3 12h18v8a2 2 0 01-2 2H5a2 2 0 01-2-2v-8z"/></svg>
-          <a href="https://SpiceForSoul.com" target="_blank" rel="noopener">SpiceForSoul.com</a>
-        </div> -->
-        </div> -->
       </div>
     </section>
   </main>
@@ -1123,7 +1017,6 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     </div>
   </div>
 
-  <footer>© 2025 SpiceForSoul </footer>
   <footer>© 2025 SpiceForSoul </footer>
 
   <script>
