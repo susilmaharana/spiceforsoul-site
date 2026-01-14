@@ -88,7 +88,7 @@
     table{width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden}
     thead th{ text-align:left; color:var(--brand); font-weight:800; padding:10px 10px 8px; border-bottom:1.5px solid var(--gold); white-space:nowrap }
     tbody td{ padding:10px; vertical-align:top; border-bottom:1px solid rgba(0,0,0,.08) }
-    td.num{ text-align:right; font-weight:700 }
+    td.num{ text-align:right; font-weight:700; display: none;}
     td.na{ color:#999; text-align:center }
     td.call{ color:#b06b00; text-align:center; font-weight:700 }
 
@@ -192,27 +192,27 @@
 
 /* Default: keep headers green for Main Course */
 #main-course .section-header h2{ color: var(--brand) }
-#main-course thead th{ color: var(--brand); border-bottom-color: var(--brand) }
+#main-course thead th{ color: var(--brand); border-bottom-color: var(--brand); display: none; }
 #main-course .dish-btn:hover, #main-course .dish-btn:focus{ color: var(--brand) }
 
 /* Appetizers in warm paprika */
 #appetizers .section-header h2{ color: var(--paprika) }
-#appetizers thead th{ color: var(--paprika); border-bottom-color: var(--paprika) }
+#appetizers thead th{ color: var(--paprika); border-bottom-color: var(--paprika); display: none; }
 #appetizers .dish-btn:hover, #appetizers .dish-btn:focus{ color: var(--paprika) }
 
 /* Desi Chinese in saffron */
 #desi-chinese .section-header h2{ color: var(--saffron) }
-#desi-chinese thead th{ color: var(--saffron); border-bottom-color: var(--saffron) }
+#desi-chinese thead th{ color: var(--saffron); border-bottom-color: var(--saffron); display: none;}
 #desi-chinese .dish-btn:hover, #desi-chinese .dish-btn:focus{ color: var(--saffron) }
 
 /* Odisha in deep indigo */
 #odisha .section-header h2{ color: var(--indigo) }
-#odisha thead th{ color: var(--indigo); border-bottom-color: var(--indigo) }
+#odisha thead th{ color: var(--indigo); border-bottom-color: var(--indigo); display: none; }
 #odisha .dish-btn:hover, #odisha .dish-btn:focus{ color: var(--indigo) }
 
 /* Desserts in plum */
 #desserts .section-header h2{ color: var(--plum) }
-#desserts thead th{ color: var(--plum); border-bottom-color: var(--plum) }
+#desserts thead th{ color: var(--plum); border-bottom-color: var(--plum); display: none; }
 #desserts .dish-btn:hover, #desserts .dish-btn:focus{ color: var(--plum) }
 
 /* Badge rainbow for quick visual cues */
@@ -300,8 +300,8 @@ table.price-align td.num > .price {
 }
 
 /* If the header set includes “Half Tray”/“Full Tray” ensure the last two columns are fixed width */
-table.price-align.has-half-full col[data-col="half"],
-table.price-align.has-half-full col[data-col="full"] { width: var(--w-large); }
+/* table.price-align.has-half-full col[data-col="half"],
+table.price-align.has-half-full col[data-col="full"] { width: var(--w-large); } */
 
 /* If the header set includes “50/100 pcs” ensure fixed width */
 table.price-align.has-50-100 col[data-col="50"],
@@ -677,8 +677,8 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
         <a role="menuitem" href="#desi-chinese">Desi Chinese</a>
         <a role="menuitem" href="#odisha">Regional (Odisha)</a>
         <a role="menuitem" href="#desserts">Desserts</a>
-        <a role="menuitem" href="#contact">Contact</a>
-        <a class="cta" role="menuitem" href="tel:+14252464129">Call</a>
+        <!-- <a role="menuitem" href="#contact">Contact</a>
+        <a class="cta" role="menuitem" href="tel:+14252464129">Call</a> -->
       </div>
     </nav>
   </div>
@@ -709,7 +709,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
   <!-- INTRO -->
   <section class="intro" aria-labelledby="intro-title">
     <h2 id="intro-title">Crave clean, homestyle food?</h2>
-    <p>My kitchen is purely vegetarian with no onion, no garlic, and no eggs—so there’s never a mix‑up. Every dish is freshly cooked at home in small batches, bringing pure vegetarian flavors from my kitchen to your home.</p>
+    <!-- <p>My kitchen is purely vegetarian with no onion, no garlic, and no eggs—so there’s never a mix‑up. Every dish is freshly cooked at home in small batches, bringing pure vegetarian flavors from my kitchen to your home.</p> -->
     <div class="badges" role="list" aria-label="Kitchen highlights">
       <span class="badge" role="listitem">No onion</span>
       <span class="badge" role="listitem">No garlic</span>
@@ -948,7 +948,7 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     <br/>
 
     <!-- CONTACT -->
-    <section class="section" id="contact">
+    <!-- <section class="section" id="contact">
       <div class="section-header">
         <img class="mthumb" src="assets/thumb_hero_chowmein.jpg" alt="Contact" loading="lazy">
         <h2>📞 Contact / Orders</h2>
@@ -963,11 +963,11 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
           <a href="mailto:spiceforsoul@outlook.com">spiceforsoul@outlook.com</a>
         </div>
       </div>
-    </section>
+    </section> -->
   </main>
 
   <!-- Sticky Social -->
-  <div class="social-bar" aria-label="Quick social links">
+  <!-- <div class="social-bar" aria-label="Quick social links">
     <a href="tel:+14252464129" title="Call">
       <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1v3.5a1 1 0 01-1 1C11.3 21.02 2.98 12.7 2.98 2.98a1 1 0 011-1H7.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/></svg>
     </a>
@@ -977,16 +977,16 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     <a href="mailto:orders@spiceforsoul.com" title="Email">
       <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
     </a>
-  </div>
+  </div> -->
 
   <!-- Mobile quick action bar -->
-  <div class="action-bar" role="navigation" aria-label="Quick actions">
+  <!-- <div class="action-bar" role="navigation" aria-label="Quick actions">
     <div class="action-inner">
       <a href="tel:+14252464129">Call</a>
       <a class="secondary" href="https://wa.me/14252464129">WhatsApp</a>
       <a class="secondary" href="mailto:orders@spiceforsoul.com">Email</a>
     </div>
-  </div>
+  </div> -->
 
   <!-- Modal template -->
   <div class="modal" id="dish-modal" aria-hidden="true" role="dialog" aria-labelledby="dish-title">
@@ -1011,10 +1011,10 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
           <span class="tag">No eggs</span>
         </div>
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <button class="btn secondary" data-close="true">Close</button>
         <a class="btn" href="tel:+14252464129">Order by phone</a>
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -1222,7 +1222,10 @@ table.price-align td[data-col="100"] > .price{ min-width: var(--w-100); }
     if(currentETag && !force) headers["If-None-Match"] = currentETag;
     const res = await fetch(`/api/menu/${DOC_SLUG}?t=${Date.now()}`, { headers, credentials:"include" });
     if(res.status === 304){ return false; }
-    if(!res.ok){ toast("Sync failed"); return false; }
+    if(!res.ok){ 
+      // toast("Sync failed"); 
+      return false; 
+      }
     const etag = res.headers.get("etag"); if(etag) currentETag = etag;
     const json = await res.json();
     if(json && json.data){ applyPayload(json.data); }
