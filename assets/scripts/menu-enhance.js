@@ -244,9 +244,16 @@ function initMenuViewToggle() {
 function initGoToTop() {
   const button = document.querySelector('.go-top');
   if (!button) return;
-  const onScroll = () => button.classList.toggle('visible', window.scrollY > 300);
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  const footer = document.querySelector('footer');
+  const updateButton = () => {
+    button.classList.toggle('visible', window.scrollY > 300);
+    const footerTop = footer ? footer.getBoundingClientRect().top : window.innerHeight;
+    const bottom = Math.max(22, window.innerHeight - footerTop + 16);
+    button.style.bottom = `${bottom}px`;
+  };
+  window.addEventListener('scroll', updateButton, { passive: true });
+  window.addEventListener('resize', updateButton);
+  updateButton();
   button.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
 

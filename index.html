@@ -6,9 +6,10 @@
   <title>SpiceForSoul – Home Food Menu</title>
   <meta name="description" content="Pure vegetarian/vegan homemade dishes and party trays in Bellevue, WA. No onion, no garlic, no eggs."/>
   <meta name="theme-color" content="#0a8f6a"/>
+  <link rel="icon" href="favicon.ico" sizes="any">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css?v=20260917">
-  <link rel="stylesheet" href="assets/styles-modern.css?v=20260920-9">
+  <link rel="stylesheet" href="assets/styles-modern.css?v=20260920-15">
 
   <!-- Accessibility & SEO: canonical, JSON-LD, and focus/skip helpers -->
   <link rel="canonical" href="https://example.com/">
@@ -492,19 +493,30 @@
     </div>
   </div>
 
-  <footer>
+  <footer id="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <span class="footer-mark" aria-hidden="true">S</span>
-        <div><strong>SpiceForSoul</strong><small>Home-cooked comfort, elevated.</small></div>
+        <img class="footer-logo" src="assets/logo.png" alt="SpiceForSoul logo" loading="lazy">
+        <div class="footer-brand-copy"><strong>SpiceForSoul</strong><small>Home-cooked comfort, elevated.</small></div>
+      </div>
+      <div class="footer-notices" aria-label="Important food notices">
+        <p class="footer-notices-label">Before you order</p>
+        <div class="footer-notice">
+          <strong>Allergy and shared kitchen</strong>
+          <p>Food is prepared in a shared kitchen where common allergens may be present. We cannot guarantee that any item is allergen-free. Please tell us about allergies before ordering.</p>
+        </div>
+        <div class="footer-notice">
+          <strong>About our images</strong>
+          <p>Food images are for representational purposes only. Actual presentation may vary.</p>
+        </div>
       </div>
     </div>
   </footer>
 
   <button class="go-top" type="button" aria-label="Go to top">↑ Go to Top</button>
 
-  <script src="assets/scripts/menu-enhance.js?v=20260920-1"></script>
-  <script src="assets/scripts/modal-data.js?v=20260920-1"></script>
+  <script src="assets/scripts/menu-enhance.js?v=20260920-3"></script>
+  <script src="assets/scripts/modal-data.js?v=20260920-3"></script>
 
   <!-- External scripts load menu, modal, and dish data -->
 </body>
